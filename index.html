@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <title>طلب صيانة المركبات</title>
+  <title>طلب صيانة المركبات (تم بالفعل)</title>
   <style>
     body {
       font-family: 'Tahoma', sans-serif;
@@ -15,6 +15,7 @@
     h1 {
       text-align: center;
       color: #003366;
+      margin-bottom: 30px;
     }
 
     .form-section, .invoice-section {
@@ -33,16 +34,32 @@
 
     input, select, button {
       width: 100%;
-      padding: 8px;
+      padding: 10px;
       margin-top: 5px;
       border: 1px solid #ccc;
       border-radius: 6px;
+      font-size: 16px;
+    }
+
+    button {
+      background-color: #003366;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: 15px;
+      padding: 12px;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #004080;
     }
 
     .row {
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
+      gap: 15px;
     }
 
     .col {
@@ -54,88 +71,190 @@
       width: 100%;
       border-collapse: collapse;
       margin-top: 20px;
-    }
-
-    table th, table td {
-      border: 1px solid #ccc;
-      padding: 12px;
-      text-align: center;
       font-size: 16px;
     }
 
+    table th, table td {
+      border: 1px solid #ddd;
+      padding: 12px;
+      text-align: center;
+    }
+
     table th {
-      background-color: #f0f8ff;
+      background-color: #003366;
+      color: white;
       font-weight: bold;
     }
 
+    table tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+
     .logo-preview {
-      height: 50px;
+      height: 60px;
       margin-top: 10px;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
     }
 
     #printArea {
       display: none;
     }
 
-    @media print {
-      body * {
-        visibility: hidden !important;
-      }
+    .pagination {
+      display: flex;
+      justify-content: center;
+      margin: 20px 0;
+    }
 
-      #printArea, #printArea * {
-        visibility: visible !important;
+    .pagination button {
+      width: auto;
+      padding: 8px 15px;
+      margin: 0 5px;
+    }
+
+    @media print {
+      body {
+        visibility: hidden;
+        margin: 0;
+        padding: 0;
       }
 
       #printArea {
+        display: block !important;
+        visibility: visible;
+        width: 100%;
+        height: auto;
         position: absolute;
         top: 0;
         right: 0;
-        width: 100%;
         padding: 20px;
+        background: white;
       }
 
       @page {
         size: A4 landscape;
-        margin: 20mm;
+        margin: 15mm;
+      }
+
+      .print-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        border-bottom: 2px solid #003366;
+        padding-bottom: 10px;
+      }
+
+      .print-title {
+        text-align: center;
+        color: #003366;
+        margin: 0;
+        font-size: 24px;
+        flex-grow: 1;
+      }
+
+      .print-logo {
+        height: 70px;
+      }
+
+      .print-date {
+        text-align: left;
+        font-size: 14px;
+        color: #666;
+      }
+
+      .print-table {
+        width: 100%;
+        margin-top: 20px;
+        border-collapse: collapse;
+      }
+
+      .print-table th {
+        background-color: #003366 !important;
+        color: white !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        padding: 10px;
+        border: 1px solid #ddd;
+      }
+
+      .print-table td {
+        padding: 10px;
+        border: 1px solid #ddd;
+      }
+
+      .no-print {
+        display: none !important;
       }
     }
   </style>
 </head>
 <body>
 
-  <h1>طلب صيانة المركبات</h1>
+  <h1>طلب صيانة المركبات (تم بالفعل)</h1>
 
   <div class="form-section">
     <div class="row">
-      <div class="col"><label>الخدمة:</label><input type="text" id="service"></div>
-      <div class="col"><label>رقم اللوحة:</label><input type="text" id="plate"></div>
-      <div class="col"><label>المنطقة:</label><input type="text" id="region"></div>
+      <div class="col">
+        <label>الخدمة:</label>
+        <input type="text" id="service" placeholder="أدخل نوع الخدمة">
+      </div>
+      <div class="col">
+        <label>رقم اللوحة:</label>
+        <input type="text" id="plate" placeholder="أدخل رقم اللوحة">
+      </div>
+      <div class="col">
+        <label>المنطقة:</label>
+        <input type="text" id="region" placeholder="أدخل المنطقة">
+      </div>
     </div>
     <div class="row">
-      <div class="col"><label>تاريخ الطلب:</label><input type="date" id="date"></div>
-      <div class="col"><label>المسافة المقطوعة (كم):</label><input type="number" id="distance"></div>
+      <div class="col">
+        <label>تاريخ الطلب:</label>
+        <input type="date" id="date">
+      </div>
+      <div class="col">
+        <label>المسافة المقطوعة (كم):</label>
+        <input type="number" id="distance" placeholder="أدخل المسافة بالكيلومترات">
+      </div>
       <div class="col">
         <label>اختيار الشعار:</label>
         <select id="logoSelect">
           <option value="https://i.imgur.com/8SUC13Y.png">الزهراني</option>
           <option value="https://i.imgur.com/yS26oQZ.png">ميم</option>
         </select>
-        <img id="logoPreview" class="logo-preview" src="https://i.imgur.com/8SUC13Y.png">
+        <img id="logoPreview" class="logo-preview" src="https://i.imgur.com/8SUC13Y.png" alt="شعار الشركة">
       </div>
     </div>
     <button onclick="addInvoice()">إضافة الفاتورة</button>
   </div>
 
   <div class="invoice-section">
-    <label>اختيار اللوحات للطباعة:</label>
-    <select id="plateSelect" multiple size="5" style="height: 100px;"></select>
-    <button onclick="printSelected()">طباعة PDF</button>
+    <div class="row">
+      <div class="col">
+        <label>اختيار اللوحات للطباعة:</label>
+        <select id="plateSelect" multiple size="5" style="height: 120px; width: 100%;"></select>
+      </div>
+      <div class="col" style="display: flex; align-items: flex-end;">
+        <button onclick="printSelected()" style="width: 100%;">طباعة PDF</button>
+      </div>
+    </div>
+
+    <div class="pagination">
+      <button onclick="prevPage()">«</button>
+      <button onclick="prevPage()">< السابق</button>
+      <span style="padding: 8px 15px; margin: 0 5px;">1 من 2</span>
+      <button onclick="nextPage()">التالي ></button>
+      <button onclick="nextPage()">»</button>
+    </div>
 
     <table id="invoiceTable">
       <thead>
         <tr>
           <th>الخدمة</th>
-          <th>اللوحة</th>
+          <th>رقم اللوحة</th>
           <th>المنطقة</th>
           <th>تاريخ الطلب</th>
           <th>المسافة (كم)</th>
@@ -149,6 +268,8 @@
 
   <script>
     const data = [];
+    let currentPage = 1;
+    const itemsPerPage = 5;
 
     document.getElementById("logoSelect").addEventListener("change", function () {
       document.getElementById("logoPreview").src = this.value;
@@ -169,20 +290,8 @@
       const record = { service, plate, region, date, distance };
       data.push(record);
 
-      const row = document.createElement("tr");
-      row.innerHTML = `
-        <td>${service}</td>
-        <td>${plate}</td>
-        <td>${region}</td>
-        <td>${date}</td>
-        <td>${parseFloat(distance).toFixed(2)}</td>
-      `;
-      document.querySelector("#invoiceTable tbody").appendChild(row);
-
-      const option = document.createElement("option");
-      option.value = plate;
-      option.text = plate;
-      document.getElementById("plateSelect").appendChild(option);
+      updateTable();
+      updatePlateSelect();
 
       // Reset inputs
       document.getElementById("service").value = "";
@@ -190,6 +299,62 @@
       document.getElementById("region").value = "";
       document.getElementById("date").value = "";
       document.getElementById("distance").value = "";
+    }
+
+    function updateTable() {
+      const tbody = document.querySelector("#invoiceTable tbody");
+      tbody.innerHTML = "";
+
+      const start = (currentPage - 1) * itemsPerPage;
+      const end = start + itemsPerPage;
+      const paginatedData = data.slice(start, end);
+
+      paginatedData.forEach(item => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${item.service}</td>
+          <td>${item.plate}</td>
+          <td>${item.region}</td>
+          <td>${item.date}</td>
+          <td>${parseFloat(item.distance).toFixed(2)}</td>
+        `;
+        tbody.appendChild(row);
+      });
+
+      updatePagination();
+    }
+
+    function updatePlateSelect() {
+      const plateSelect = document.getElementById("plateSelect");
+      plateSelect.innerHTML = "";
+      
+      data.forEach(item => {
+        const option = document.createElement("option");
+        option.value = item.plate;
+        option.text = item.plate;
+        plateSelect.appendChild(option);
+      });
+    }
+
+    function updatePagination() {
+      const totalPages = Math.ceil(data.length / itemsPerPage);
+      const paginationText = `${currentPage} من ${totalPages}`;
+      document.querySelector(".pagination span").textContent = paginationText;
+    }
+
+    function prevPage() {
+      if (currentPage > 1) {
+        currentPage--;
+        updateTable();
+      }
+    }
+
+    function nextPage() {
+      const totalPages = Math.ceil(data.length / itemsPerPage);
+      if (currentPage < totalPages) {
+        currentPage++;
+        updateTable();
+      }
     }
 
     function printSelected() {
@@ -201,43 +366,58 @@
 
       const logo = document.getElementById("logoSelect").value;
       const selectedData = data.filter(d => selected.includes(d.plate));
+      const now = new Date();
+      const printDate = now.toLocaleDateString('ar-EG') + ' ' + now.toLocaleTimeString('ar-EG');
 
       let html = `
-        <div style="text-align:center;margin-bottom:20px;">
-          <img src="${logo}" style="max-height:80px;"><h2>طلب صيانة المركبات</h2>
+        <div class="print-header">
+          <img class="print-logo" src="${logo}" alt="شعار الشركة">
+          <h1 class="print-title">طلب صيانة المركبات (تم بالفعل)</h1>
+          <div class="print-date">${printDate}</div>
         </div>
-        <table style="width:100%;border-collapse:collapse;text-align:center;font-size:16px;margin-top:20px;">
+        <table class="print-table">
           <thead>
-            <tr style="background:#f0f8ff;">
-              <th style="border:1px solid #ccc;padding:10px;">الخدمة</th>
-              <th style="border:1px solid #ccc;padding:10px;">اللوحة</th>
-              <th style="border:1px solid #ccc;padding:10px;">المنطقة</th>
-              <th style="border:1px solid #ccc;padding:10px;">تاريخ الطلب</th>
-              <th style="border:1px solid #ccc;padding:10px;">المسافة (كم)</th>
+            <tr>
+              <th>الخدمة</th>
+              <th>رقم اللوحة</th>
+              <th>المنطقة</th>
+              <th>تاريخ الطلب</th>
+              <th>المسافة (كم)</th>
             </tr>
           </thead>
           <tbody>
       `;
 
       selectedData.forEach(item => {
-        html += `<tr>
-          <td style="border:1px solid #ccc;padding:10px;">${item.service}</td>
-          <td style="border:1px solid #ccc;padding:10px;">${item.plate}</td>
-          <td style="border:1px solid #ccc;padding:10px;">${item.region}</td>
-          <td style="border:1px solid #ccc;padding:10px;">${item.date}</td>
-          <td style="border:1px solid #ccc;padding:10px;">${parseFloat(item.distance).toFixed(2)}</td>
-        </tr>`;
+        html += `
+          <tr>
+            <td>${item.service}</td>
+            <td>${item.plate}</td>
+            <td>${item.region}</td>
+            <td>${item.date}</td>
+            <td>${parseFloat(item.distance).toFixed(2)}</td>
+          </tr>
+        `;
       });
 
-      html += "</tbody></table>";
+      html += `
+          </tbody>
+        </table>
+        <div style="margin-top: 20px; text-align: left; font-size: 14px;">
+          <p>عدد السجلات المختارة: ${selected.length}</p>
+        </div>
+      `;
 
       const printArea = document.getElementById("printArea");
       printArea.innerHTML = html;
 
-      // تأخير الطباعة حتى يتم تحميل الصور
-      setTimeout(() => window.print(), 500);
+      // تأخير الطباعة لضمان تحميل الصورة
+      setTimeout(() => {
+        window.print();
+      }, 300);
     }
   </script>
 </body>
+</html>
 </html>
 

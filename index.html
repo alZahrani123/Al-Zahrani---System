@@ -1,239 +1,196 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>الزهراني | إدارة المركبات</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     body {
-      direction: rtl;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f7f9fc;
-      padding: 20px;
+      font-family: 'Arial', sans-serif;
+      background-color: #f4f6fa;
       margin: 0;
-    }
-
-    .container {
-      max-width: 960px;
-      margin: auto;
-      background: white;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.1);
-    }
-
-    h1 {
-      text-align: center;
-      color: #0d47a1;
-      margin-bottom: 30px;
-    }
-
-    label {
-      display: block;
-      margin-top: 15px;
-      font-weight: bold;
+      padding: 20px;
       color: #333;
     }
-
-    input, select, button {
-      width: 100%;
-      padding: 10px;
-      margin-top: 5px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
+    .container {
+      max-width: 900px;
+      margin: auto;
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
     }
-
-    button {
-      background-color: #1976d2;
-      color: white;
-      font-weight: bold;
-      border: none;
-      margin-top: 20px;
-      transition: 0.3s;
-    }
-
-    button:hover {
-      background-color: #0d47a1;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 30px;
-    }
-
-    th, td {
-      border: 1px solid #ddd;
-      padding: 10px;
+    h1 {
       text-align: center;
+      margin-bottom: 30px;
+      color: #005baa;
     }
-
-    th {
-      background-color: #eeeeee;
+    label {
+      font-weight: bold;
     }
-
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0 20px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+    button {
+      padding: 12px 25px;
+      background-color: #005baa;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #004080;
+    }
+    .logo-selection img {
+      height: 80px;
+      margin: 10px;
+      border: 2px solid transparent;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    .logo-selection img.selected {
+      border-color: #005baa;
+    }
     .print-area {
       display: none;
-      font-size: 18px;
-      direction: rtl;
-      padding: 20px;
     }
-
     .invoice {
-      border-bottom: 2px dashed #ccc;
-      padding: 20px 0;
-      page-break-inside: avoid;
+      padding: 30px;
+      border: 2px dashed #ccc;
+      margin-top: 30px;
+      border-radius: 10px;
+      background: #fff;
     }
-
-    .logo {
-      max-height: 100px;
-      display: block;
-      margin: auto;
+    .invoice h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #222;
     }
-
-    @media print {
-      body *:not(.print-area) {
-        display: none !important;
-      }
-      .print-area {
-        display: block !important;
-      }
+    .invoice table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    .invoice table td {
+      padding: 10px;
+      border-bottom: 1px solid #ccc;
     }
   </style>
 </head>
 <body>
-
   <div class="container">
-    <h1>الزهراني | إدارة المركبات</h1>
+    <h1>الزهراني لإدارة المركبات</h1>
 
-    <form id="invoiceForm">
-      <label>الخدمة</label>
-      <input type="text" id="service" required>
+    <label>الخدمة:</label>
+    <input type="text" id="service" placeholder="مثال: صيانة دورية"/>
 
-      <label>رقم اللوحة</label>
-      <input type="text" id="plate" required>
+    <label>اللوحة:</label>
+    <input type="text" id="plateNumber" placeholder="مثال: أ ب ج 1234"/>
 
-      <label>المنطقة</label>
-      <input type="text" id="area" required>
+    <label>المنطقة:</label>
+    <input type="text" id="region" placeholder="مثال: الدمام"/>
 
-      <label>تاريخ طلب الخدمة</label>
-      <input type="date" id="date" required>
+    <label>تاريخ طلب الخدمة:</label>
+    <input type="date" id="serviceDate"/>
 
-      <label>المسافة المقطوعة (كم)</label>
-      <input type="number" id="distance" required>
+    <label>المسافة المقطوعة (كم):</label>
+    <input type="number" id="distance"/>
 
-      <button type="submit">إضافة الفاتورة</button>
-    </form>
+    <button onclick="addInvoice()">إضافة للفاتورة</button>
 
-    <label>اختيار الشعار للطباعة</label>
-    <select id="logoSelect">
-      <option value="https://i.imgur.com/8SUC13Y.png">شعار 1</option>
-      <option value="https://i.imgur.com/yS26oQZ.png">شعار 2</option>
+    <label>اختر أرقام اللوحات للطباعة:</label>
+    <select id="plateSelector">
+      <option disabled selected>اختر رقم اللوحة</option>
     </select>
 
-    <label>اختيار اللوحات المطلوب طباعة فواتيرها</label>
-    <select id="plateFilter" multiple size="5"></select>
+    <label>اختر الشعار:</label>
+    <div class="logo-selection">
+      <img src="https://i.imgur.com/8SUC13Y.png" onclick="selectLogo(this)">
+      <img src="https://i.imgur.com/yS26oQZ.png" onclick="selectLogo(this)">
+    </div>
 
-    <button onclick="printSelected()">طباعة الفواتير المحددة</button>
+    <button onclick="printInvoice()">طباعة PDF</button>
 
-    <table id="dataTable">
-      <thead>
-        <tr>
-          <th>الخدمة</th>
-          <th>رقم اللوحة</th>
-          <th>المنطقة</th>
-          <th>تاريخ الطلب</th>
-          <th>المسافة</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
+    <div class="print-area" id="printArea">
+      <div class="invoice" id="invoiceContent">
+        <img id="selectedLogo" src="" style="max-width: 120px; display: block; margin: 0 auto 20px;">
+        <h2>فاتورة خدمة مركبة</h2>
+        <table>
+          <tr><td>الخدمة</td><td id="outService"></td></tr>
+          <tr><td>رقم اللوحة</td><td id="outPlate"></td></tr>
+          <tr><td>المنطقة</td><td id="outRegion"></td></tr>
+          <tr><td>تاريخ الطلب</td><td id="outDate"></td></tr>
+          <tr><td>المسافة المقطوعة</td><td id="outDistance"></td></tr>
+        </table>
+      </div>
+    </div>
   </div>
 
-  <div id="printSection" class="print-area"></div>
-
   <script>
-    const form = document.getElementById('invoiceForm');
-    const tableBody = document.querySelector('#dataTable tbody');
-    const plateFilter = document.getElementById('plateFilter');
-    const printSection = document.getElementById('printSection');
-    const logoSelect = document.getElementById('logoSelect');
-
+    let selectedLogo = "";
     const invoices = [];
 
-    form.addEventListener('submit', function(e) {
-      e.preventDefault();
+    function selectLogo(img) {
+      document.querySelectorAll('.logo-selection img').forEach(i => i.classList.remove('selected'));
+      img.classList.add('selected');
+      selectedLogo = img.src;
+    }
 
+    function addInvoice() {
       const service = document.getElementById('service').value;
-      const plate = document.getElementById('plate').value;
-      const area = document.getElementById('area').value;
-      const date = document.getElementById('date').value;
+      const plate = document.getElementById('plateNumber').value;
+      const region = document.getElementById('region').value;
+      const date = document.getElementById('serviceDate').value;
       const distance = document.getElementById('distance').value;
 
-      const invoice = { service, plate, area, date, distance };
-      invoices.push(invoice);
-      addRow(invoice);
-      updatePlateDropdown(plate);
-      form.reset();
-    });
-
-    function addRow(data) {
-      const row = document.createElement('tr');
-      row.innerHTML = `
-        <td>${data.service}</td>
-        <td>${data.plate}</td>
-        <td>${data.area}</td>
-        <td>${data.date}</td>
-        <td>${data.distance} كم</td>
-      `;
-      tableBody.appendChild(row);
-    }
-
-    function updatePlateDropdown(plate) {
-      const exists = Array.from(plateFilter.options).some(opt => opt.value === plate);
-      if (!exists) {
-        const option = document.createElement('option');
-        option.value = plate;
-        option.textContent = plate;
-        plateFilter.appendChild(option);
-      }
-    }
-
-    function printSelected() {
-      const selectedOptions = Array.from(plateFilter.selectedOptions);
-      const selectedPlates = selectedOptions.map(opt => opt.value);
-      const logoURL = logoSelect.value;
-
-      const selectedInvoices = invoices.filter(inv => selectedPlates.includes(inv.plate));
-
-      if (selectedInvoices.length === 0) {
-        alert("لم يتم اختيار أي فواتير للطباعة.");
+      if (!service || !plate || !region || !date || !distance) {
+        alert('يرجى تعبئة جميع الحقول');
         return;
       }
 
-      let html = `
-        <div style="text-align:center;">
-          <img src="${logoURL}" class="logo">
-        </div>
-      `;
+      invoices.push({ service, plate, region, date, distance });
+      const selector = document.getElementById('plateSelector');
+      const option = document.createElement('option');
+      option.value = plate;
+      option.text = plate;
+      selector.appendChild(option);
 
-      selectedInvoices.forEach(inv => {
-        html += `
-          <div class="invoice">
-            <h2>فاتورة خدمة</h2>
-            <p><strong>الخدمة:</strong> ${inv.service}</p>
-            <p><strong>رقم اللوحة:</strong> ${inv.plate}</p>
-            <p><strong>المنطقة:</strong> ${inv.area}</p>
-            <p><strong>تاريخ الطلب:</strong> ${inv.date}</p>
-            <p><strong>المسافة:</strong> ${inv.distance} كم</p>
-          </div>
-        `;
-      });
+      document.getElementById('service').value = '';
+      document.getElementById('plateNumber').value = '';
+      document.getElementById('region').value = '';
+      document.getElementById('serviceDate').value = '';
+      document.getElementById('distance').value = '';
+    }
 
-      printSection.innerHTML = html;
-      window.print();
+    function printInvoice() {
+      const plateSelected = document.getElementById('plateSelector').value;
+      if (!plateSelected || plateSelected === 'اختر رقم اللوحة') {
+        alert('يرجى اختيار رقم اللوحة أولاً');
+        return;
+      }
+      const invoice = invoices.find(i => i.plate === plateSelected);
+      if (!invoice) return alert('لم يتم العثور على بيانات الفاتورة');
+
+      document.getElementById('outService').innerText = invoice.service;
+      document.getElementById('outPlate').innerText = invoice.plate;
+      document.getElementById('outRegion').innerText = invoice.region;
+      document.getElementById('outDate').innerText = invoice.date;
+      document.getElementById('outDistance').innerText = invoice.distance + " كم";
+      document.getElementById('selectedLogo').src = selectedLogo || 'https://i.imgur.com/8SUC13Y.png';
+
+      const printContents = document.getElementById('printArea').innerHTML;
+      const printWindow = window.open('', '', 'width=900,height=600');
+      printWindow.document.write(`<html><head><title>طباعة فاتورة</title></head><body>${printContents}</body></html>`);
+      printWindow.document.close();
+      printWindow.focus();
+      printWindow.print();
+      printWindow.close();
     }
   </script>
-
 </body>
 </html>

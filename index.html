@@ -68,22 +68,24 @@
       font-weight: bold;
     }
 
-    #printArea {
-      display: none;
-    }
-
     .logo-preview {
       height: 50px;
       margin-top: 10px;
     }
 
+    #printArea {
+      display: none;
+    }
+
     @media print {
       body * {
-        visibility: hidden;
+        visibility: hidden !important;
       }
+
       #printArea, #printArea * {
-        visibility: visible;
+        visibility: visible !important;
       }
+
       #printArea {
         position: absolute;
         top: 0;
@@ -91,6 +93,7 @@
         width: 100%;
         padding: 20px;
       }
+
       @page {
         size: A4 landscape;
         margin: 20mm;
@@ -199,19 +202,22 @@
       const logo = document.getElementById("logoSelect").value;
       const selectedData = data.filter(d => selected.includes(d.plate));
 
-      let html = `<div style="text-align:center;">
-        <img src="${logo}" style="max-height:80px;"><h2>طلب صيانة المركبات</h2></div>`;
-
-      html += `<table style="width:100%;border-collapse:collapse;text-align:center;font-size:16px;margin-top:20px;">
-        <thead>
-          <tr style="background:#f0f8ff;">
-            <th style="border:1px solid #ccc;padding:10px;">الخدمة</th>
-            <th style="border:1px solid #ccc;padding:10px;">اللوحة</th>
-            <th style="border:1px solid #ccc;padding:10px;">المنطقة</th>
-            <th style="border:1px solid #ccc;padding:10px;">تاريخ الطلب</th>
-            <th style="border:1px solid #ccc;padding:10px;">المسافة (كم)</th>
-          </tr>
-        </thead><tbody>`;
+      let html = `
+        <div style="text-align:center;margin-bottom:20px;">
+          <img src="${logo}" style="max-height:80px;"><h2>طلب صيانة المركبات</h2>
+        </div>
+        <table style="width:100%;border-collapse:collapse;text-align:center;font-size:16px;margin-top:20px;">
+          <thead>
+            <tr style="background:#f0f8ff;">
+              <th style="border:1px solid #ccc;padding:10px;">الخدمة</th>
+              <th style="border:1px solid #ccc;padding:10px;">اللوحة</th>
+              <th style="border:1px solid #ccc;padding:10px;">المنطقة</th>
+              <th style="border:1px solid #ccc;padding:10px;">تاريخ الطلب</th>
+              <th style="border:1px solid #ccc;padding:10px;">المسافة (كم)</th>
+            </tr>
+          </thead>
+          <tbody>
+      `;
 
       selectedData.forEach(item => {
         html += `<tr>
@@ -228,11 +234,10 @@
       const printArea = document.getElementById("printArea");
       printArea.innerHTML = html;
 
-      // بعد الانتظار للتأكد أن الصور حملت
-      setTimeout(() => {
-        window.print();
-      }, 500);
+      // تأخير الطباعة حتى يتم تحميل الصور
+      setTimeout(() => window.print(), 500);
     }
   </script>
 </body>
 </html>
+

@@ -89,10 +89,11 @@
         top: 0;
         right: 0;
         width: 100%;
+        padding: 20px;
       }
       @page {
         size: A4 landscape;
-        margin: 15mm;
+        margin: 20mm;
       }
     }
   </style>
@@ -141,7 +142,6 @@
     </table>
   </div>
 
-  <!-- منطقة الطباعة -->
   <div id="printArea"></div>
 
   <script>
@@ -166,24 +166,22 @@
       const record = { service, plate, region, date, distance };
       data.push(record);
 
-      const table = document.getElementById("invoiceTable").querySelector("tbody");
       const row = document.createElement("tr");
       row.innerHTML = `
         <td>${service}</td>
         <td>${plate}</td>
         <td>${region}</td>
         <td>${date}</td>
-        <td>${parseFloat(distance).toFixed(3)}</td>
+        <td>${parseFloat(distance).toFixed(2)}</td>
       `;
-      table.appendChild(row);
+      document.querySelector("#invoiceTable tbody").appendChild(row);
 
-      const select = document.getElementById("plateSelect");
       const option = document.createElement("option");
       option.value = plate;
-      option.textContent = plate;
-      select.appendChild(option);
+      option.text = plate;
+      document.getElementById("plateSelect").appendChild(option);
 
-      // مسح الحقول
+      // Reset inputs
       document.getElementById("service").value = "";
       document.getElementById("plate").value = "";
       document.getElementById("region").value = "";
@@ -192,53 +190,49 @@
     }
 
     function printSelected() {
-      const selectedPlates = Array.from(document.getElementById("plateSelect").selectedOptions).map(opt => opt.value);
-      if (selectedPlates.length === 0) {
+      const selected = Array.from(document.getElementById("plateSelect").selectedOptions).map(opt => opt.value);
+      if (selected.length === 0) {
         alert("يرجى اختيار لوحة واحدة على الأقل للطباعة.");
         return;
       }
 
-      const selectedData = data.filter(d => selectedPlates.includes(d.plate));
       const logo = document.getElementById("logoSelect").value;
+      const selectedData = data.filter(d => selected.includes(d.plate));
 
-      let html = `<div style="text-align:center;margin-bottom:20px;">
-        <img src="${logo}" style="max-height:80px;">
-        <h2 style="margin-top:10px;">طلب صيانة المركبات</h2>
-      </div>`;
+      let html = `<div style="text-align:center;">
+        <img src="${logo}" style="max-height:80px;"><h2>طلب صيانة المركبات</h2></div>`;
 
-      html += `
-        <table style="width:100%;border-collapse:collapse;text-align:center;font-size:16px;">
-          <thead>
-            <tr style="background:#f0f8ff;">
-              <th style="border:1px solid #ccc;padding:10px;">الخدمة</th>
-              <th style="border:1px solid #ccc;padding:10px;">اللوحة</th>
-              <th style="border:1px solid #ccc;padding:10px;">المنطقة</th>
-              <th style="border:1px solid #ccc;padding:10px;">تاريخ الطلب</th>
-              <th style="border:1px solid #ccc;padding:10px;">المسافة (كم)</th>
-            </tr>
-          </thead>
-          <tbody>
-      `;
+      html += `<table style="width:100%;border-collapse:collapse;text-align:center;font-size:16px;margin-top:20px;">
+        <thead>
+          <tr style="background:#f0f8ff;">
+            <th style="border:1px solid #ccc;padding:10px;">الخدمة</th>
+            <th style="border:1px solid #ccc;padding:10px;">اللوحة</th>
+            <th style="border:1px solid #ccc;padding:10px;">المنطقة</th>
+            <th style="border:1px solid #ccc;padding:10px;">تاريخ الطلب</th>
+            <th style="border:1px solid #ccc;padding:10px;">المسافة (كم)</th>
+          </tr>
+        </thead><tbody>`;
 
       selectedData.forEach(item => {
-        html += `
-          <tr>
-            <td style="border:1px solid #ccc;padding:10px;">${item.service}</td>
-            <td style="border:1px solid #ccc;padding:10px;">${item.plate}</td>
-            <td style="border:1px solid #ccc;padding:10px;">${item.region}</td>
-            <td style="border:1px solid #ccc;padding:10px;">${item.date}</td>
-            <td style="border:1px solid #ccc;padding:10px;">${parseFloat(item.distance).toFixed(3)}</td>
-          </tr>
-        `;
+        html += `<tr>
+          <td style="border:1px solid #ccc;padding:10px;">${item.service}</td>
+          <td style="border:1px solid #ccc;padding:10px;">${item.plate}</td>
+          <td style="border:1px solid #ccc;padding:10px;">${item.region}</td>
+          <td style="border:1px solid #ccc;padding:10px;">${item.date}</td>
+          <td style="border:1px solid #ccc;padding:10px;">${parseFloat(item.distance).toFixed(2)}</td>
+        </tr>`;
       });
 
       html += "</tbody></table>";
 
       const printArea = document.getElementById("printArea");
       printArea.innerHTML = html;
-      window.print();
+
+      // بعد الانتظار للتأكد أن الصور حملت
+      setTimeout(() => {
+        window.print();
+      }, 500);
     }
   </script>
-
 </body>
 </html>

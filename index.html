@@ -1,195 +1,241 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
   <title>الزهراني | إدارة المركبات</title>
   <style>
     body {
-      font-family: 'Arial', sans-serif;
+      font-family: 'Tahoma', sans-serif;
       background-color: #f4f6fa;
       margin: 0;
       padding: 20px;
       color: #333;
     }
-    .container {
-      max-width: 900px;
-      margin: auto;
-      background-color: #fff;
-      padding: 30px;
-      border-radius: 16px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.1);
-    }
+
     h1 {
       text-align: center;
-      margin-bottom: 30px;
-      color: #005baa;
+      color: #003366;
     }
+
+    .form-section, .invoice-section {
+      background: white;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
     label {
+      display: block;
+      margin-top: 10px;
       font-weight: bold;
     }
-    input, select {
+
+    input, select, button {
       width: 100%;
-      padding: 10px;
-      margin: 10px 0 20px;
-      border-radius: 8px;
+      padding: 8px;
+      margin-top: 5px;
       border: 1px solid #ccc;
+      border-radius: 6px;
     }
-    button {
-      padding: 12px 25px;
-      background-color: #005baa;
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
+
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
     }
-    button:hover {
-      background-color: #004080;
+
+    .col {
+      flex: 1;
+      min-width: 200px;
     }
-    .logo-selection img {
-      height: 80px;
-      margin: 10px;
-      border: 2px solid transparent;
-      border-radius: 10px;
-      cursor: pointer;
-    }
-    .logo-selection img.selected {
-      border-color: #005baa;
-    }
-    .print-area {
-      display: none;
-    }
-    .invoice {
-      padding: 30px;
-      border: 2px dashed #ccc;
-      margin-top: 30px;
-      border-radius: 10px;
-      background: #fff;
-    }
-    .invoice h2 {
-      text-align: center;
-      margin-bottom: 20px;
-      color: #222;
-    }
-    .invoice table {
+
+    table {
       width: 100%;
       border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    table th, table td {
+      border: 1px solid #ccc;
+      padding: 12px;
+      text-align: center;
+      font-size: 16px;
+    }
+
+    table th {
+      background-color: #f0f8ff;
+      font-weight: bold;
+    }
+
+    #printArea {
+      display: none;
+    }
+
+    .logo-preview {
+      height: 50px;
       margin-top: 10px;
     }
-    .invoice table td {
-      padding: 10px;
-      border-bottom: 1px solid #ccc;
+
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      #printArea, #printArea * {
+        visibility: visible;
+      }
+      #printArea {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 100%;
+      }
+      @page {
+        size: A4 landscape;
+        margin: 20mm;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>الزهراني لإدارة المركبات</h1>
 
-    <label>الخدمة:</label>
-    <input type="text" id="service" placeholder="مثال: صيانة دورية"/>
+  <h1>الزهراني لإدارة المركبات</h1>
 
-    <label>اللوحة:</label>
-    <input type="text" id="plateNumber" placeholder="مثال: أ ب ج 1234"/>
-
-    <label>المنطقة:</label>
-    <input type="text" id="region" placeholder="مثال: الدمام"/>
-
-    <label>تاريخ طلب الخدمة:</label>
-    <input type="date" id="serviceDate"/>
-
-    <label>المسافة المقطوعة (كم):</label>
-    <input type="number" id="distance"/>
-
-    <button onclick="addInvoice()">إضافة للفاتورة</button>
-
-    <label>اختر أرقام اللوحات للطباعة:</label>
-    <select id="plateSelector">
-      <option disabled selected>اختر رقم اللوحة</option>
-    </select>
-
-    <label>اختر الشعار:</label>
-    <div class="logo-selection">
-      <img src="https://i.imgur.com/8SUC13Y.png" onclick="selectLogo(this)">
-      <img src="https://i.imgur.com/yS26oQZ.png" onclick="selectLogo(this)">
+  <div class="form-section">
+    <div class="row">
+      <div class="col"><label>الخدمة:</label><input type="text" id="service"></div>
+      <div class="col"><label>رقم اللوحة:</label><input type="text" id="plate"></div>
+      <div class="col"><label>المنطقة:</label><input type="text" id="region"></div>
     </div>
-
-    <button onclick="printInvoice()">طباعة PDF</button>
-
-    <div class="print-area" id="printArea">
-      <div class="invoice" id="invoiceContent">
-        <img id="selectedLogo" src="" style="max-width: 120px; display: block; margin: 0 auto 20px;">
-        <h2>فاتورة خدمة مركبة</h2>
-        <table>
-          <tr><td>الخدمة</td><td id="outService"></td></tr>
-          <tr><td>رقم اللوحة</td><td id="outPlate"></td></tr>
-          <tr><td>المنطقة</td><td id="outRegion"></td></tr>
-          <tr><td>تاريخ الطلب</td><td id="outDate"></td></tr>
-          <tr><td>المسافة المقطوعة</td><td id="outDistance"></td></tr>
-        </table>
+    <div class="row">
+      <div class="col"><label>تاريخ الطلب:</label><input type="date" id="date"></div>
+      <div class="col"><label>المسافة المقطوعة (كم):</label><input type="number" id="distance"></div>
+      <div class="col">
+        <label>اختيار الشعار:</label>
+        <select id="logoSelect">
+          <option value="https://i.imgur.com/8SUC13Y.png">الشعار الزهراني</option>
+          <option value="https://i.imgur.com/yS26oQZ.png">شعار ميم</option>
+        </select>
+        <img id="logoPreview" class="logo-preview" src="https://i.imgur.com/8SUC13Y.png">
       </div>
     </div>
+    <button onclick="addInvoice()">إضافة الفاتورة</button>
   </div>
 
-  <script>
-    let selectedLogo = "";
-    const invoices = [];
+  <div class="invoice-section">
+    <label>اختيار اللوحات للطباعة:</label>
+    <select id="plateSelect" multiple size="5" style="height: 100px;"></select>
+    <button onclick="printSelected()">طباعة PDF</button>
 
-    function selectLogo(img) {
-      document.querySelectorAll('.logo-selection img').forEach(i => i.classList.remove('selected'));
-      img.classList.add('selected');
-      selectedLogo = img.src;
-    }
+    <table id="invoiceTable">
+      <thead>
+        <tr>
+          <th>الخدمة</th>
+          <th>اللوحة</th>
+          <th>المنطقة</th>
+          <th>تاريخ الطلب</th>
+          <th>المسافة (كم)</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <!-- للطباعة -->
+  <div id="printArea"></div>
+
+  <script>
+    const data = [];
+
+    document.getElementById("logoSelect").addEventListener("change", function () {
+      document.getElementById("logoPreview").src = this.value;
+    });
 
     function addInvoice() {
-      const service = document.getElementById('service').value;
-      const plate = document.getElementById('plateNumber').value;
-      const region = document.getElementById('region').value;
-      const date = document.getElementById('serviceDate').value;
-      const distance = document.getElementById('distance').value;
+      const service = document.getElementById("service").value.trim();
+      const plate = document.getElementById("plate").value.trim();
+      const region = document.getElementById("region").value.trim();
+      const date = document.getElementById("date").value;
+      const distance = document.getElementById("distance").value.trim();
 
       if (!service || !plate || !region || !date || !distance) {
-        alert('يرجى تعبئة جميع الحقول');
+        alert("يرجى تعبئة جميع الحقول.");
         return;
       }
 
-      invoices.push({ service, plate, region, date, distance });
-      const selector = document.getElementById('plateSelector');
-      const option = document.createElement('option');
-      option.value = plate;
-      option.text = plate;
-      selector.appendChild(option);
+      const record = { service, plate, region, date, distance };
+      data.push(record);
 
-      document.getElementById('service').value = '';
-      document.getElementById('plateNumber').value = '';
-      document.getElementById('region').value = '';
-      document.getElementById('serviceDate').value = '';
-      document.getElementById('distance').value = '';
+      const table = document.getElementById("invoiceTable").querySelector("tbody");
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${service}</td>
+        <td>${plate}</td>
+        <td>${region}</td>
+        <td>${date}</td>
+        <td>${parseFloat(distance).toFixed(3)}</td>
+      `;
+      table.appendChild(row);
+
+      const select = document.getElementById("plateSelect");
+      const option = document.createElement("option");
+      option.value = plate;
+      option.textContent = plate;
+      select.appendChild(option);
+
+      // مسح الحقول
+      document.getElementById("service").value = "";
+      document.getElementById("plate").value = "";
+      document.getElementById("region").value = "";
+      document.getElementById("date").value = "";
+      document.getElementById("distance").value = "";
     }
 
-    function printInvoice() {
-      const plateSelected = document.getElementById('plateSelector').value;
-      if (!plateSelected || plateSelected === 'اختر رقم اللوحة') {
-        alert('يرجى اختيار رقم اللوحة أولاً');
+    function printSelected() {
+      const selectedPlates = Array.from(document.getElementById("plateSelect").selectedOptions).map(opt => opt.value);
+      if (selectedPlates.length === 0) {
+        alert("يرجى اختيار لوحة واحدة على الأقل للطباعة.");
         return;
       }
-      const invoice = invoices.find(i => i.plate === plateSelected);
-      if (!invoice) return alert('لم يتم العثور على بيانات الفاتورة');
 
-      document.getElementById('outService').innerText = invoice.service;
-      document.getElementById('outPlate').innerText = invoice.plate;
-      document.getElementById('outRegion').innerText = invoice.region;
-      document.getElementById('outDate').innerText = invoice.date;
-      document.getElementById('outDistance').innerText = invoice.distance + " كم";
-      document.getElementById('selectedLogo').src = selectedLogo || 'https://i.imgur.com/8SUC13Y.png';
+      const selectedData = data.filter(d => selectedPlates.includes(d.plate));
+      const logo = document.getElementById("logoSelect").value;
 
-      const printContents = document.getElementById('printArea').innerHTML;
-      const printWindow = window.open('', '', 'width=900,height=600');
-      printWindow.document.write(`<html><head><title>طباعة فاتورة</title></head><body>${printContents}</body></html>`);
-      printWindow.document.close();
-      printWindow.focus();
-      printWindow.print();
-      printWindow.close();
+      let html = `<div style="text-align:center;margin-bottom:20px;">
+        <img src="${logo}" style="max-height:80px;">
+      </div>`;
+
+      html += `
+        <table style="width:100%;border-collapse:collapse;text-align:center;font-size:16px;">
+          <thead>
+            <tr style="background:#f0f8ff;">
+              <th style="border:1px solid #ccc;padding:10px;">الخدمة</th>
+              <th style="border:1px solid #ccc;padding:10px;">اللوحة</th>
+              <th style="border:1px solid #ccc;padding:10px;">المنطقة</th>
+              <th style="border:1px solid #ccc;padding:10px;">تاريخ الطلب</th>
+              <th style="border:1px solid #ccc;padding:10px;">المسافة (كم)</th>
+            </tr>
+          </thead>
+          <tbody>
+      `;
+
+      selectedData.forEach(item => {
+        html += `
+          <tr>
+            <td style="border:1px solid #ccc;padding:10px;">${item.service}</td>
+            <td style="border:1px solid #ccc;padding:10px;">${item.plate}</td>
+            <td style="border:1px solid #ccc;padding:10px;">${item.region}</td>
+            <td style="border:1px solid #ccc;padding:10px;">${item.date}</td>
+            <td style="border:1px solid #ccc;padding:10px;">${parseFloat(item.distance).toFixed(3)}</td>
+          </tr>
+        `;
+      });
+
+      html += "</tbody></table>";
+
+      const printArea = document.getElementById("printArea");
+      printArea.innerHTML = html;
+      window.print();
     }
   </script>
 </body>

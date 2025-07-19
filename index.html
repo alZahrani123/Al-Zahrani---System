@@ -147,6 +147,15 @@
       display: none;
     }
 
+    .datalist-input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 16px;
+    }
+
     @media print {
       body {
         visibility: hidden;
@@ -259,70 +268,64 @@
         </div>
         <div class="col">
           <label>المنطقة:</label>
-          <select id="region">
-            <option value="">اختر المنطقة</option>
-            <option value="الرياض">الرياض</option>
-            <option value="جدة">جدة</option>
-            <option value="مكة المكرمة">مكة المكرمة</option>
-            <option value="المدينة المنورة">المدينة المنورة</option>
-            <option value="الدمام">الدمام</option>
-            <option value="الخبر">الخبر</option>
-            <option value="الظهران">الظهران</option>
-            <option value="بريدة">بريدة</option>
-            <option value="تبوك">تبوك</option>
-            <option value="الطائف">الطائف</option>
-            <option value="حائل">حائل</option>
-            <option value="أبها">أبها</option>
-            <option value="نجران">نجران</option>
-            <option value="جازان">جازان</option>
-            <option value="سكاكا">سكاكا</option>
-            <option value="عرعر">عرعر</option>
-            <option value="القريات">القريات</option>
-            <option value="النعيرية">النعيرية</option>
-            <option value="رفحاء">رفحاء</option>
-            <option value="ضباء">ضباء</option>
-            <option value="الليث">الليث</option>
-            <option value="القنفذة">القنفذة</option>
-            <option value="بيشة">بيشة</option>
-            <option value="محايل عسير">محايل عسير</option>
-            <option value="خميس مشيط">خميس مشيط</option>
-            <option value="الخرج">الخرج</option>
-            <option value="الدوادمي">الدوادمي</option>
-            <option value="وادي الدواسر">وادي الدواسر</option>
-            <option value="الأحساء">الأحساء</option>
-            <option value="حفر الباطن">حفر الباطن</option>
-            <option value="القطيف">القطيف</option>
-            <option value="ينبع">ينبع</option>
-            <option value="العلا">العلا</option>
-            <option value="رابغ">رابغ</option>
-            <option value="الباحة">الباحة</option>
-            <option value="الزلفي">الزلفي</option>
-            <option value="الرس">الرس</option>
-            <option value="عنيزة">عنيزة</option>
-            <option value="المجمعة">المجمعة</option>
-            <option value="الخفجي">الخفجي</option>
-            <option value="طريف">طريف</option>
-            <option value="الدرب">الدرب</option>
-            <option value="صبيا">صبيا</option>
-            <option value="أحد رفيدة">أحد رفيدة</option>
-            <option value="بلجرشي">بلجرشي</option>
-            <option value="المهد">المهد</option>
-            <option value="الوجه">الوجه</option>
-            <option value="أملج">أملج</option>
-            <option value="بدر">بدر</option>
-            <option value="الحريق">الحريق</option>
-            <option value="حوطة بني تميم">حوطة بني تميم</option>
-            <option value="الغاط">الغاط</option>
-            <option value="رماح">رماح</option>
-            <option value="ثادق">ثادق</option>
-            <option value="الحوطة">الحوطة</option>
-            <option value="ليلى">ليلى</option>
-            <option value="السليل">السليل</option>
-            <option value="ضرما">ضرما</option>
-            <option value="المزاحمية">المزاحمية</option>
-            <option value="رماح">رماح</option>
-            <option value="ثادق">ثادق</option>
-          </select>
+          <input list="regions" id="region" class="datalist-input" placeholder="اكتب أو اختر المنطقة">
+          <datalist id="regions">
+            <option value="الرياض">
+            <option value="جدة">
+            <option value="مكة المكرمة">
+            <option value="المدينة المنورة">
+            <option value="الدمام">
+            <option value="الخبر">
+            <option value="الظهران">
+            <option value="بريدة">
+            <option value="تبوك">
+            <option value="الطائف">
+            <option value="حائل">
+            <option value="أبها">
+            <option value="نجران">
+            <option value="جازان">
+            <option value="سكاكا">
+            <option value="عرعر">
+            <option value="القريات">
+            <option value="النعيرية">
+            <option value="رفحاء">
+            <option value="ضباء">
+            <option value="الليث">
+            <option value="القنفذة">
+            <option value="بيشة">
+            <option value="محايل عسير">
+            <option value="خميس مشيط">
+            <option value="الخرج">
+            <option value="الدوادمي">
+            <option value="وادي الدواسر">
+            <option value="الأحساء">
+            <option value="حفر الباطن">
+            <option value="القطيف">
+            <option value="ينبع">
+            <option value="العلا">
+            <option value="رابغ">
+            <option value="الباحة">
+            <option value="الزلفي">
+            <option value="الرس">
+            <option value="عنيزة">
+            <option value="المجمعة">
+            <option value="الخفجي">
+            <option value="طريف">
+            <option value="الدرب">
+            <option value="صبيا">
+            <option value="أحد رفيدة">
+            <option value="بلجرشي">
+            <option value="المهد">
+            <option value="الوجه">
+            <option value="أملج">
+            <option value="بدر">
+            <option value="الحريق">
+            <option value="حوطة بني تميم">
+            <option value="الغاط">
+            <option value="السليل">
+            <option value="ضرما">
+            <option value="المزاحمية">
+          </datalist>
         </div>
       </div>
       <div class="row">
@@ -387,6 +390,19 @@
     let currentPage = 1;
     const itemsPerPage = 5;
     let loggedIn = false;
+    let regionsList = [
+      "الرياض", "جدة", "مكة المكرمة", "المدينة المنورة", "الدمام", 
+      "الخبر", "الظهران", "بريدة", "تبوك", "الطائف", 
+      "حائل", "أبها", "نجران", "جازان", "سكاكا", 
+      "عرعر", "القريات", "النعيرية", "رفحاء", "ضباء", 
+      "الليث", "القنفذة", "بيشة", "محايل عسير", "خميس مشيط", 
+      "الخرج", "الدوادمي", "وادي الدواسر", "الأحساء", "حفر الباطن", 
+      "القطيف", "ينبع", "العلا", "رابغ", "الباحة", 
+      "الزلفي", "الرس", "عنيزة", "المجمعة", "الخفجي", 
+      "طريف", "الدرب", "صبيا", "أحد رفيدة", "بلجرشي", 
+      "المهد", "الوجه", "أملج", "بدر", "الحريق", 
+      "حوطة بني تميم", "الغاط", "السليل", "ضرما", "المزاحمية"
+    ];
 
     // نظام تسجيل الدخول
     function login() {
@@ -430,6 +446,12 @@
         return;
       }
 
+      // إذا كانت المنطقة جديدة نضيفها للقائمة
+      if (!regionsList.includes(region)) {
+        regionsList.push(region);
+        updateRegionsDatalist();
+      }
+
       const record = { service, plate, region, date, distance };
       data.push(record);
 
@@ -442,6 +464,17 @@
       document.getElementById("region").value = "";
       document.getElementById("date").value = "";
       document.getElementById("distance").value = "";
+    }
+
+    function updateRegionsDatalist() {
+      const datalist = document.getElementById("regions");
+      datalist.innerHTML = "";
+      
+      regionsList.forEach(region => {
+        const option = document.createElement("option");
+        option.value = region;
+        datalist.appendChild(option);
+      });
     }
 
     function updateTable() {

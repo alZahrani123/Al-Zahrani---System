@@ -114,6 +114,39 @@
       margin: 0 5px;
     }
 
+    .login-container {
+      max-width: 400px;
+      margin: 50px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .login-title {
+      text-align: center;
+      color: #003366;
+      margin-bottom: 20px;
+    }
+
+    .alert {
+      padding: 15px;
+      margin-bottom: 20px;
+      border: 1px solid transparent;
+      border-radius: 4px;
+      text-align: center;
+    }
+
+    .alert-danger {
+      color: #721c24;
+      background-color: #f8d7da;
+      border-color: #f5c6cb;
+    }
+
+    .hidden {
+      display: none;
+    }
+
     @media print {
       body {
         visibility: hidden;
@@ -193,89 +226,199 @@
 </head>
 <body>
 
-  <h1>طلب صيانة المركبات (تم بالفعل)</h1>
-
-  <div class="form-section">
-    <div class="row">
-      <div class="col">
-        <label>الخدمة:</label>
-        <input type="text" id="service" placeholder="أدخل نوع الخدمة">
-      </div>
-      <div class="col">
-        <label>رقم اللوحة:</label>
-        <input type="text" id="plate" placeholder="أدخل رقم اللوحة">
-      </div>
-      <div class="col">
-        <label>المنطقة:</label>
-        <input type="text" id="region" placeholder="أدخل المنطقة">
-      </div>
+  <!-- نظام تسجيل الدخول -->
+  <div id="loginSection" class="login-container">
+    <h2 class="login-title">نظام إدارة المركبات - الزهراني</h2>
+    <div id="loginError" class="alert alert-danger hidden">
+      تحاول الدخول لنظام إدارة المركبات - الزهراني<br>اسم المستخدم أو كلمة المرور غير صحيحة!
     </div>
-    <div class="row">
-      <div class="col">
-        <label>تاريخ الطلب:</label>
-        <input type="date" id="date">
-      </div>
-      <div class="col">
-        <label>المسافة المقطوعة (كم):</label>
-        <input type="number" id="distance" placeholder="أدخل المسافة بالكيلومترات">
-      </div>
-      <div class="col">
-        <label>اختيار الشعار:</label>
-        <select id="logoSelect">
-          <option value="https://i.imgur.com/8SUC13Y.png">الزهراني</option>
-          <option value="https://i.imgur.com/yS26oQZ.png">ميم</option>
-        </select>
-        <img id="logoPreview" class="logo-preview" src="https://i.imgur.com/8SUC13Y.png" alt="شعار الشركة">
-      </div>
-    </div>
-    <button onclick="addInvoice()">إضافة الفاتورة</button>
+    <form id="loginForm">
+      <label for="username">اسم المستخدم:</label>
+      <input type="text" id="username" placeholder="أدخل اسم المستخدم" required>
+      
+      <label for="password">كلمة المرور:</label>
+      <input type="password" id="password" placeholder="أدخل كلمة المرور" required>
+      
+      <button type="button" onclick="login()">تسجيل الدخول</button>
+    </form>
   </div>
 
-  <div class="invoice-section">
-    <div class="row">
-      <div class="col">
-        <label>اختيار اللوحات للطباعة:</label>
-        <select id="plateSelect" multiple size="5" style="height: 120px; width: 100%;"></select>
+  <!-- نظام إدارة المركبات -->
+  <div id="mainContent" class="hidden">
+    <h1>طلب صيانة المركبات (تم بالفعل)</h1>
+
+    <div class="form-section">
+      <div class="row">
+        <div class="col">
+          <label>الخدمة:</label>
+          <input type="text" id="service" placeholder="أدخل نوع الخدمة">
+        </div>
+        <div class="col">
+          <label>رقم اللوحة:</label>
+          <input type="text" id="plate" placeholder="أدخل رقم اللوحة">
+        </div>
+        <div class="col">
+          <label>المنطقة:</label>
+          <select id="region">
+            <option value="">اختر المنطقة</option>
+            <option value="الرياض">الرياض</option>
+            <option value="جدة">جدة</option>
+            <option value="مكة المكرمة">مكة المكرمة</option>
+            <option value="المدينة المنورة">المدينة المنورة</option>
+            <option value="الدمام">الدمام</option>
+            <option value="الخبر">الخبر</option>
+            <option value="الظهران">الظهران</option>
+            <option value="بريدة">بريدة</option>
+            <option value="تبوك">تبوك</option>
+            <option value="الطائف">الطائف</option>
+            <option value="حائل">حائل</option>
+            <option value="أبها">أبها</option>
+            <option value="نجران">نجران</option>
+            <option value="جازان">جازان</option>
+            <option value="سكاكا">سكاكا</option>
+            <option value="عرعر">عرعر</option>
+            <option value="القريات">القريات</option>
+            <option value="النعيرية">النعيرية</option>
+            <option value="رفحاء">رفحاء</option>
+            <option value="ضباء">ضباء</option>
+            <option value="الليث">الليث</option>
+            <option value="القنفذة">القنفذة</option>
+            <option value="بيشة">بيشة</option>
+            <option value="محايل عسير">محايل عسير</option>
+            <option value="خميس مشيط">خميس مشيط</option>
+            <option value="الخرج">الخرج</option>
+            <option value="الدوادمي">الدوادمي</option>
+            <option value="وادي الدواسر">وادي الدواسر</option>
+            <option value="الأحساء">الأحساء</option>
+            <option value="حفر الباطن">حفر الباطن</option>
+            <option value="القطيف">القطيف</option>
+            <option value="ينبع">ينبع</option>
+            <option value="العلا">العلا</option>
+            <option value="رابغ">رابغ</option>
+            <option value="الباحة">الباحة</option>
+            <option value="الزلفي">الزلفي</option>
+            <option value="الرس">الرس</option>
+            <option value="عنيزة">عنيزة</option>
+            <option value="المجمعة">المجمعة</option>
+            <option value="الخفجي">الخفجي</option>
+            <option value="طريف">طريف</option>
+            <option value="الدرب">الدرب</option>
+            <option value="صبيا">صبيا</option>
+            <option value="أحد رفيدة">أحد رفيدة</option>
+            <option value="بلجرشي">بلجرشي</option>
+            <option value="المهد">المهد</option>
+            <option value="الوجه">الوجه</option>
+            <option value="أملج">أملج</option>
+            <option value="بدر">بدر</option>
+            <option value="الحريق">الحريق</option>
+            <option value="حوطة بني تميم">حوطة بني تميم</option>
+            <option value="الغاط">الغاط</option>
+            <option value="رماح">رماح</option>
+            <option value="ثادق">ثادق</option>
+            <option value="الحوطة">الحوطة</option>
+            <option value="ليلى">ليلى</option>
+            <option value="السليل">السليل</option>
+            <option value="ضرما">ضرما</option>
+            <option value="المزاحمية">المزاحمية</option>
+            <option value="رماح">رماح</option>
+            <option value="ثادق">ثادق</option>
+          </select>
+        </div>
       </div>
-      <div class="col" style="display: flex; align-items: flex-end;">
-        <button onclick="printSelected()" style="width: 100%;">طباعة PDF</button>
+      <div class="row">
+        <div class="col">
+          <label>تاريخ الطلب:</label>
+          <input type="date" id="date">
+        </div>
+        <div class="col">
+          <label>المسافة المقطوعة (كم):</label>
+          <input type="number" id="distance" placeholder="أدخل المسافة بالكيلومترات">
+        </div>
+        <div class="col">
+          <label>اختيار الشعار:</label>
+          <select id="logoSelect">
+            <option value="https://i.imgur.com/8SUC13Y.png">الزهراني</option>
+            <option value="https://i.imgur.com/yS26oQZ.png">ميم</option>
+          </select>
+          <img id="logoPreview" class="logo-preview" src="https://i.imgur.com/8SUC13Y.png" alt="شعار الشركة">
+        </div>
       </div>
+      <button onclick="addInvoice()">إضافة الفاتورة</button>
     </div>
 
-    <div class="pagination">
-      <button onclick="prevPage()">«</button>
-      <button onclick="prevPage()">< السابق</button>
-      <span style="padding: 8px 15px; margin: 0 5px;">1 من 2</span>
-      <button onclick="nextPage()">التالي ></button>
-      <button onclick="nextPage()">»</button>
+    <div class="invoice-section">
+      <div class="row">
+        <div class="col">
+          <label>اختيار اللوحات للطباعة:</label>
+          <select id="plateSelect" multiple size="5" style="height: 120px; width: 100%;"></select>
+        </div>
+        <div class="col" style="display: flex; align-items: flex-end;">
+          <button onclick="printSelected()" style="width: 100%;">طباعة PDF</button>
+        </div>
+      </div>
+
+      <div class="pagination">
+        <button onclick="prevPage()">«</button>
+        <button onclick="prevPage()">< السابق</button>
+        <span style="padding: 8px 15px; margin: 0 5px;">1 من 2</span>
+        <button onclick="nextPage()">التالي ></button>
+        <button onclick="nextPage()">»</button>
+      </div>
+
+      <table id="invoiceTable">
+        <thead>
+          <tr>
+            <th>الخدمة</th>
+            <th>رقم اللوحة</th>
+            <th>المنطقة</th>
+            <th>تاريخ الطلب</th>
+            <th>المسافة (كم)</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
     </div>
 
-    <table id="invoiceTable">
-      <thead>
-        <tr>
-          <th>الخدمة</th>
-          <th>رقم اللوحة</th>
-          <th>المنطقة</th>
-          <th>تاريخ الطلب</th>
-          <th>المسافة (كم)</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
+    <div id="printArea"></div>
   </div>
-
-  <div id="printArea"></div>
 
   <script>
     const data = [];
     let currentPage = 1;
     const itemsPerPage = 5;
+    let loggedIn = false;
+
+    // نظام تسجيل الدخول
+    function login() {
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
+      
+      if (username === "مشرف" && password === "00") {
+        document.getElementById("loginError").classList.add("hidden");
+        document.getElementById("loginSection").classList.add("hidden");
+        document.getElementById("mainContent").classList.remove("hidden");
+        loggedIn = true;
+      } else {
+        document.getElementById("loginError").classList.remove("hidden");
+      }
+    }
+
+    // إذا كان المستخدم يحاول الوصول مباشرة للصفحة الرئيسية دون تسجيل دخول
+    if (!loggedIn) {
+      document.getElementById("loginSection").classList.remove("hidden");
+      document.getElementById("mainContent").classList.add("hidden");
+    }
 
     document.getElementById("logoSelect").addEventListener("change", function () {
       document.getElementById("logoPreview").src = this.value;
     });
 
     function addInvoice() {
+      if (!loggedIn) {
+        alert("يجب تسجيل الدخول أولاً");
+        return;
+      }
+
       const service = document.getElementById("service").value.trim();
       const plate = document.getElementById("plate").value.trim();
       const region = document.getElementById("region").value.trim();
@@ -358,6 +501,11 @@
     }
 
     function printSelected() {
+      if (!loggedIn) {
+        alert("يجب تسجيل الدخول أولاً");
+        return;
+      }
+
       const selected = Array.from(document.getElementById("plateSelect").selectedOptions).map(opt => opt.value);
       if (selected.length === 0) {
         alert("يرجى اختيار لوحة واحدة على الأقل للطباعة.");

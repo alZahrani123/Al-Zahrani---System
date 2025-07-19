@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <title>طلب</title>
+  <title>طلب صيانة</title>
   <style>
     body {
       font-family: 'Tahoma', sans-serif;
@@ -16,6 +16,8 @@
       text-align: center;
       color: #003366;
       margin-bottom: 30px;
+      border-bottom: 2px solid #003366;
+      padding-bottom: 10px;
     }
 
     .form-section, .invoice-section {
@@ -91,11 +93,9 @@
     }
 
     .logo-preview {
-      height: 60px;
+      height: 100px;
       margin-top: 10px;
       display: block;
-      margin-left: auto;
-      margin-right: auto;
     }
 
     #printArea {
@@ -156,6 +156,49 @@
       font-size: 16px;
     }
 
+    /* تنسيق معلومات المؤسسة */
+    .company-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding: 15px;
+      background: linear-gradient(to right, #003366, #004080);
+      color: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .company-info {
+      text-align: right;
+    }
+
+    .company-name {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .company-details {
+      font-size: 16px;
+    }
+
+    .company-detail-item {
+      margin-bottom: 5px;
+      direction: rtl;
+      text-align: right;
+    }
+
+    .company-detail-item span {
+      float: left;
+      margin-left: 10px;
+    }
+
+    .company-logo {
+      height: 100px;
+    }
+
+    /* تنسيق الطباعة */
     @media print {
       body {
         visibility: hidden;
@@ -180,13 +223,22 @@
         margin: 15mm;
       }
 
+      /* إزالة الروابط من الطباعة */
+      a, a:link, a:visited, a:hover, a:active {
+        display: none !important;
+      }
+
       .print-header {
         display: flex;
-        justify-content: space-between;
-        align-items: center;
+        flex-direction: column;
         margin-bottom: 20px;
-        border-bottom: 2px solid #003366;
-        padding-bottom: 10px;
+      }
+
+      .print-header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        width: 100%;
       }
 
       .print-title {
@@ -194,23 +246,41 @@
         color: #003366;
         margin: 0;
         font-size: 24px;
-        flex-grow: 1;
+      }
+
+      .print-company-details {
+        text-align: right;
+        margin-top: 15px;
+        font-size: 16px;
+        direction: rtl;
+      }
+
+      .print-company-details div {
+        margin-bottom: 8px;
+        text-align: right;
+      }
+
+      .print-company-details div span {
+        float: left;
+        margin-left: 10px;
       }
 
       .print-logo {
-        height: 70px;
+        height: 100px;
       }
 
       .print-date {
         text-align: left;
         font-size: 14px;
         color: #666;
+        margin-top: 10px;
       }
 
       .print-table {
         width: 100%;
         margin-top: 20px;
         border-collapse: collapse;
+        background-color: white;
       }
 
       .print-table th {
@@ -225,6 +295,7 @@
       .print-table td {
         padding: 10px;
         border: 1px solid #ddd;
+        background-color: white;
       }
 
       .no-print {
@@ -237,9 +308,9 @@
 
   <!-- نظام تسجيل الدخول -->
   <div id="loginSection" class="login-container">
-    <h2 class="login-title">نظام إدارة المركبات - الزهراني</h2>
+    <h2 class="login-title">نظام إدارة المركبات</h2>
     <div id="loginError" class="alert alert-danger hidden">
-      تحاول الدخول لنظام إدارة المركبات - الزهراني<br>اسم المستخدم أو كلمة المرور غير صحيحة!
+      اسم المستخدم أو كلمة المرور غير صحيحة!
     </div>
     <form id="loginForm">
       <label for="username">اسم المستخدم:</label>
@@ -254,8 +325,53 @@
 
   <!-- نظام إدارة المركبات -->
   <div id="mainContent" class="hidden">
-    <h1>طلب</h1>
+    <!-- عنوان الصفحة -->
+    <h1>طلب صيانة</h1>
 
+    <!-- معلومات المؤسسة -->
+    <div class="company-header">
+      <div class="company-info">
+        <div class="company-name" id="currentCompanyName">مؤسسة هند عطية</div>
+        <div class="company-details">
+          <div class="company-detail-item">السجل التجاري: <span id="currentCommercialRegister">205012519</span></div>
+          <div class="company-detail-item">الرقم الضريبي: <span id="currentTaxNumber">302120852100003</span></div>
+        </div>
+      </div>
+      <img id="mainLogo" class="company-logo" src="https://i.imgur.com/8SUC13Y.png" alt="شعار الشركة">
+    </div>
+
+    <!-- اختيار المؤسسة -->
+    <div class="form-section">
+      <div class="row">
+        <div class="col">
+          <label>اختيار المؤسسة:</label>
+          <select id="companySelect" onchange="changeCompany()">
+            <option value="hinda">مؤسسة هند عطية</option>
+            <option value="mim">مؤسسة ميم</option>
+          </select>
+        </div>
+        <div class="col">
+          <label>اختيار الشعار:</label>
+          <select id="logoSelect">
+            <option value="https://i.imgur.com/8SUC13Y.png">الزهراني</option>
+            <option value="https://i.imgur.com/yS26oQZ.png">ميم</option>
+          </select>
+          <img id="logoPreview" class="logo-preview" src="https://i.imgur.com/8SUC13Y.png" alt="شعار الشركة">
+        </div>
+      </div>
+    </div>
+
+    <!-- قسم البحث -->
+    <div class="search-section">
+      <h3 style="margin-top: 0;">بحث عن مركبة</h3>
+      <div class="search-row">
+        <input type="text" id="searchPlate" placeholder="ابحث برقم اللوحة">
+        <button onclick="searchByPlate()">بحث</button>
+        <button onclick="resetSearch()" style="background: #6c757d;">إعادة تعيين</button>
+      </div>
+    </div>
+
+    <!-- نموذج إدخال البيانات -->
     <div class="form-section">
       <div class="row">
         <div class="col">
@@ -338,17 +454,14 @@
           <input type="number" id="distance" placeholder="أدخل المسافة بالكيلومترات">
         </div>
         <div class="col">
-          <label>اختيار الشعار:</label>
-          <select id="logoSelect">
-            <option value="https://i.imgur.com/8SUC13Y.png">الزهراني</option>
-            <option value="https://i.imgur.com/yS26oQZ.png">ميم</option>
-          </select>
-          <img id="logoPreview" class="logo-preview" src="https://i.imgur.com/8SUC13Y.png" alt="شعار الشركة">
+          <label>ملاحظات:</label>
+          <input type="text" id="notes" placeholder="أدخل أي ملاحظات إضافية">
         </div>
       </div>
       <button onclick="addInvoice()">إضافة الفاتورة</button>
     </div>
 
+    <!-- قسم الفواتير -->
     <div class="invoice-section">
       <div class="row">
         <div class="col">
@@ -376,6 +489,7 @@
             <th>المنطقة</th>
             <th>تاريخ الطلب</th>
             <th>المسافة (كم)</th>
+            <th>إجراءات</th>
           </tr>
         </thead>
         <tbody></tbody>
@@ -386,6 +500,23 @@
   </div>
 
   <script>
+    // بيانات المؤسسات
+    const companies = {
+      hinda: {
+        name: "مؤسسة هند عطية",
+        commercialRegister: "205012519",
+        taxNumber: "302120852100003",
+        logo: "https://i.imgur.com/8SUC13Y.png"
+      },
+      mim: {
+        name: "مؤسسة ميم",
+        commercialRegister: "305012519",
+        taxNumber: "402120852100003",
+        logo: "https://i.imgur.com/yS26oQZ.png"
+      }
+    };
+
+    // البيانات العامة
     const data = [];
     let currentPage = 1;
     const itemsPerPage = 5;
@@ -404,7 +535,7 @@
       "حوطة بني تميم", "الغاط", "السليل", "ضرما", "المزاحمية"
     ];
 
-    // نظام تسجيل الدخول
+    // دالة تسجيل الدخول
     function login() {
       const username = document.getElementById("username").value;
       const password = document.getElementById("password").value;
@@ -419,15 +550,70 @@
       }
     }
 
-    // إذا كان المستخدم يحاول الوصول مباشرة للصفحة الرئيسية دون تسجيل دخول
-    if (!loggedIn) {
-      document.getElementById("loginSection").classList.remove("hidden");
-      document.getElementById("mainContent").classList.add("hidden");
+    // تغيير المؤسسة
+    function changeCompany() {
+      const companySelect = document.getElementById("companySelect");
+      const selectedCompany = companySelect.value;
+      const company = companies[selectedCompany];
+      
+      document.getElementById("currentCompanyName").textContent = company.name;
+      document.getElementById("currentCommercialRegister").textContent = company.commercialRegister;
+      document.getElementById("currentTaxNumber").textContent = company.taxNumber;
+      document.getElementById("mainLogo").src = company.logo;
+      
+      // تحديث الشعار
+      document.getElementById("logoSelect").value = company.logo;
+      document.getElementById("logoPreview").src = company.logo;
     }
 
-    document.getElementById("logoSelect").addEventListener("change", function () {
-      document.getElementById("logoPreview").src = this.value;
-    });
+    // دالة البحث برقم اللوحة
+    function searchByPlate() {
+      const searchTerm = document.getElementById("searchPlate").value.trim().toLowerCase();
+      if (!searchTerm) {
+        updateTable();
+        return;
+      }
+
+      const filteredData = data.filter(item => 
+        item.plate.toLowerCase().includes(searchTerm)
+      );
+
+      renderFilteredTable(filteredData);
+    }
+
+    // دالة إعادة تعيين البحث
+    function resetSearch() {
+      document.getElementById("searchPlate").value = "";
+      updateTable();
+    }
+
+    // دالة لعرض الجدول بعد البحث
+    function renderFilteredTable(filteredData) {
+      const tbody = document.querySelector("#invoiceTable tbody");
+      tbody.innerHTML = "";
+
+      const start = (currentPage - 1) * itemsPerPage;
+      const end = start + itemsPerPage;
+      const paginatedData = filteredData.slice(start, end);
+
+      paginatedData.forEach((item, index) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${item.service}</td>
+          <td>${item.plate}</td>
+          <td>${item.region}</td>
+          <td>${item.date}</td>
+          <td>${parseFloat(item.distance).toFixed(2)}</td>
+          <td>
+            <button onclick="editRecord(${index})" class="action-btn edit-btn">تعديل</button>
+            <button onclick="deleteRecord(${index})" class="action-btn delete-btn">حذف</button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+
+      updatePagination(filteredData.length);
+    }
 
     function addInvoice() {
       if (!loggedIn) {
@@ -440,9 +626,10 @@
       const region = document.getElementById("region").value.trim();
       const date = document.getElementById("date").value;
       const distance = document.getElementById("distance").value.trim();
+      const notes = document.getElementById("notes").value.trim();
 
       if (!service || !plate || !region || !date || !distance) {
-        alert("يرجى تعبئة جميع الحقول.");
+        alert("يرجى تعبئة جميع الحقول المطلوبة.");
         return;
       }
 
@@ -452,7 +639,7 @@
         updateRegionsDatalist();
       }
 
-      const record = { service, plate, region, date, distance };
+      const record = { service, plate, region, date, distance, notes };
       data.push(record);
 
       updateTable();
@@ -464,6 +651,7 @@
       document.getElementById("region").value = "";
       document.getElementById("date").value = "";
       document.getElementById("distance").value = "";
+      document.getElementById("notes").value = "";
     }
 
     function updateRegionsDatalist() {
@@ -478,26 +666,7 @@
     }
 
     function updateTable() {
-      const tbody = document.querySelector("#invoiceTable tbody");
-      tbody.innerHTML = "";
-
-      const start = (currentPage - 1) * itemsPerPage;
-      const end = start + itemsPerPage;
-      const paginatedData = data.slice(start, end);
-
-      paginatedData.forEach(item => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
-          <td>${item.service}</td>
-          <td>${item.plate}</td>
-          <td>${item.region}</td>
-          <td>${item.date}</td>
-          <td>${parseFloat(item.distance).toFixed(2)}</td>
-        `;
-        tbody.appendChild(row);
-      });
-
-      updatePagination();
+      renderFilteredTable(data);
     }
 
     function updatePlateSelect() {
@@ -512,8 +681,8 @@
       });
     }
 
-    function updatePagination() {
-      const totalPages = Math.ceil(data.length / itemsPerPage);
+    function updatePagination(totalItems = data.length) {
+      const totalPages = Math.ceil(totalItems / itemsPerPage);
       const paginationText = `${currentPage} من ${totalPages}`;
       document.querySelector(".pagination span").textContent = paginationText;
     }
@@ -533,6 +702,33 @@
       }
     }
 
+    // دالة تعديل السجل
+    function editRecord(index) {
+      const record = data[index];
+      if (!record) return;
+
+      document.getElementById("service").value = record.service;
+      document.getElementById("plate").value = record.plate;
+      document.getElementById("region").value = record.region;
+      document.getElementById("date").value = record.date;
+      document.getElementById("distance").value = record.distance;
+      document.getElementById("notes").value = record.notes || "";
+
+      // حذف السجل القديم
+      data.splice(index, 1);
+      updateTable();
+      updatePlateSelect();
+    }
+
+    // دالة حذف السجل
+    function deleteRecord(index) {
+      if (confirm("هل أنت متأكد من حذف هذا السجل؟")) {
+        data.splice(index, 1);
+        updateTable();
+        updatePlateSelect();
+      }
+    }
+
     function printSelected() {
       if (!loggedIn) {
         alert("يجب تسجيل الدخول أولاً");
@@ -549,11 +745,21 @@
       const selectedData = data.filter(d => selected.includes(d.plate));
       const now = new Date();
       const printDate = now.toLocaleDateString('ar-EG') + ' ' + now.toLocaleTimeString('ar-EG');
+      const companySelect = document.getElementById("companySelect");
+      const company = companies[companySelect.value];
 
       let html = `
         <div class="print-header">
-          <img class="print-logo" src="${logo}" alt="شعار الشركة">
-          <h1 class="print-title">طلب</h1>
+          <div class="print-header-content">
+            <div>
+              <h1 class="print-title">طلب صيانة</h1>
+              <div class="print-company-details">
+                <div>السجل التجاري: <span>${company.commercialRegister}</span></div>
+                <div>الرقم الضريبي: <span>${company.taxNumber}</span></div>
+              </div>
+            </div>
+            <img class="print-logo" src="${logo}" alt="شعار الشركة">
+          </div>
           <div class="print-date">${printDate}</div>
         </div>
         <table class="print-table">
@@ -564,6 +770,7 @@
               <th>المنطقة</th>
               <th>تاريخ الطلب</th>
               <th>المسافة (كم)</th>
+              <th>ملاحظات</th>
             </tr>
           </thead>
           <tbody>
@@ -577,6 +784,7 @@
             <td>${item.region}</td>
             <td>${item.date}</td>
             <td>${parseFloat(item.distance).toFixed(2)}</td>
+            <td>${item.notes || '-'}</td>
           </tr>
         `;
       });
@@ -592,7 +800,27 @@
       const printArea = document.getElementById("printArea");
       printArea.innerHTML = html;
 
-      // تأخير الطباعة لضمان تحميل الصورة
+      setTimeout(() => {
+        window.print();
+      }, 300);
+    }
+
+    // تهيئة الصفحة عند التحميل
+    document.addEventListener('DOMContentLoaded', function() {
+      document.getElementById("logoSelect").addEventListener("change", function() {
+        const logoUrl = this.value;
+        document.getElementById("logoPreview").src = logoUrl;
+      });
+
+      // إذا كان المستخدم يحاول الوصول مباشرة للصفحة الرئيسية دون تسجيل دخول
+      if (!loggedIn) {
+        document.getElementById("loginSection").classList.remove("hidden");
+        document.getElementById("mainContent").classList.add("hidden");
+      }
+    });
+  </script>
+</body>
+</html>
       setTimeout(() => {
         window.print();
       }, 300);

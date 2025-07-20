@@ -330,7 +330,7 @@
       <div class="company-info">
         <div class="company-name" id="currentCompanyName">مؤسسة هند عطية</div>
         <div class="company-details">
-          <div class="company-detail-item">السجل التجاري: <span id="currentCommercialRegister">205012519</span></div>
+          <div class="company-detail-item">السجل التجاري: <span id="currentCommercialRegister">205012619</span></div>
           <div class="company-detail-item">الرقم الضريبي: <span id="currentTaxNumber">302120852100003</span></div>
         </div>
       </div>
@@ -504,14 +504,14 @@
     const companies = {
       hinda: {
         name: "مؤسسة هند عطية",
-        commercialRegister: "205012519",
+        commercialRegister: "205012619", // تم التحديث
         taxNumber: "302120852100003",
         logo: "https://i.imgur.com/8SUC13Y.png"
       },
       mim: {
         name: "مؤسسة ميم",
-        commercialRegister: "305012519",
-        taxNumber: "402120852100003",
+        commercialRegister: "4030385483", // تم التحديث
+        taxNumber: "311054471900003", // تم التحديث
         logo: "https://i.imgur.com/yS26oQZ.png"
       }
     };
@@ -1027,6 +1027,9 @@
       updateRegionsDatalist();
       updateTable(); // Ensure table is rendered on initial load (though likely empty until data is added)
       updatePlateSelect(); // Ensure plate select is updated
+      
+      // Initial company load
+      changeCompany();
     });
   </script>
 </body>

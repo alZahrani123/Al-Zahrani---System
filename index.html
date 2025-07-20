@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>طلب صيانة</title>
+  <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
   <style>
     body {
       font-family: 'Tahoma', sans-serif;
@@ -185,13 +186,13 @@
 
     .company-detail-item {
       margin-bottom: 5px;
-      direction: rtl;
-      text-align: right;
+      direction: rtl; /* Ensures RTL flow for the whole line */
+      text-align: right; /* Aligns text to the right */
+      white-space: nowrap; /* Prevents numbers from wrapping */
     }
 
     .company-detail-item span {
-      float: left;
-      margin-left: 10px;
+      display: inline-block; /* Allows inline positioning without float issues */
     }
 
     .company-logo {
@@ -258,11 +259,11 @@
       .print-company-details div {
         margin-bottom: 8px;
         text-align: right;
+        white-space: nowrap; /* Prevents numbers from wrapping in print */
       }
 
       .print-company-details div span {
-        float: left;
-        margin-left: 10px;
+        display: inline-block; /* Allows inline positioning without float issues */
       }
 
       .print-logo {
@@ -306,7 +307,6 @@
 </head>
 <body>
 
-  <!-- نظام تسجيل الدخول -->
   <div id="loginSection" class="login-container">
     <h2 class="login-title">نظام إدارة المركبات</h2>
     <div id="loginError" class="alert alert-danger hidden">
@@ -323,12 +323,9 @@
     </form>
   </div>
 
-  <!-- نظام إدارة المركبات -->
   <div id="mainContent" class="hidden">
-    <!-- عنوان الصفحة -->
     <h1>طلب صيانة</h1>
 
-    <!-- معلومات المؤسسة -->
     <div class="company-header">
       <div class="company-info">
         <div class="company-name" id="currentCompanyName">مؤسسة هند عطية</div>
@@ -340,7 +337,6 @@
       <img id="mainLogo" class="company-logo" src="https://i.imgur.com/8SUC13Y.png" alt="شعار الشركة">
     </div>
 
-    <!-- اختيار المؤسسة -->
     <div class="form-section">
       <div class="row">
         <div class="col">
@@ -361,7 +357,6 @@
       </div>
     </div>
 
-    <!-- قسم البحث -->
     <div class="search-section">
       <h3 style="margin-top: 0;">بحث عن مركبة</h3>
       <div class="search-row">
@@ -371,7 +366,6 @@
       </div>
     </div>
 
-    <!-- نموذج إدخال البيانات -->
     <div class="form-section">
       <div class="row">
         <div class="col">
@@ -459,9 +453,15 @@
         </div>
       </div>
       <button onclick="addInvoice()">إضافة الفاتورة</button>
+      
+      <div class="form-section" style="margin-top: 20px;">
+        <h3>رفع ملف Excel</h3>
+        <input type="file" id="excelUpload" accept=".xls, .xlsx">
+        <button onclick="handleExcelUpload()">رفع وتحميل البيانات</button>
+      </div>
+
     </div>
 
-    <!-- قسم الفواتير -->
     <div class="invoice-section">
       <div class="row">
         <div class="col">
@@ -522,16 +522,16 @@
     const itemsPerPage = 5;
     let loggedIn = false;
     let regionsList = [
-      "الرياض", "جدة", "مكة المكرمة", "المدينة المنورة", "الدمام", 
-      "الخبر", "الظهران", "بريدة", "تبوك", "الطائف", 
-      "حائل", "أبها", "نجران", "جازان", "سكاكا", 
-      "عرعر", "القريات", "النعيرية", "رفحاء", "ضباء", 
-      "الليث", "القنفذة", "بيشة", "محايل عسير", "خميس مشيط", 
-      "الخرج", "الدوادمي", "وادي الدواسر", "الأحساء", "حفر الباطن", 
-      "القطيف", "ينبع", "العلا", "رابغ", "الباحة", 
-      "الزلفي", "الرس", "عنيزة", "المجمعة", "الخفجي", 
-      "طريف", "الدرب", "صبيا", "أحد رفيدة", "بلجرشي", 
-      "المهد", "الوجه", "أملج", "بدر", "الحريق", 
+      "الرياض", "جدة", "مكة المكرمة", "المدينة المنورة", "الدمام",
+      "الخبر", "الظهران", "بريدة", "تبوك", "الطائف",
+      "حائل", "أبها", "نجران", "جازان", "سكاكا",
+      "عرعر", "القريات", "النعيرية", "رفحاء", "ضباء",
+      "الليث", "القنفذة", "بيشة", "محايل عسير", "خميس مشيط",
+      "الخرج", "الدوادمي", "وادي الدواسر", "الأحساء", "حفر الباطن",
+      "القطيف", "ينبع", "العلا", "رابغ", "الباحة",
+      "الزلفي", "الرس", "عنيزة", "المجمعة", "الخفجي",
+      "طريف", "الدرب", "صبيا", "أحد رفيدة", "بلجرشي",
+      "المهد", "الوجه", "أملج", "بدر", "الحريق",
       "حوطة بني تميم", "الغاط", "السليل", "ضرما", "المزاحمية"
     ];
 
@@ -574,7 +574,7 @@
         return;
       }
 
-      const filteredData = data.filter(item => 
+      const filteredData = data.filter(item =>
         item.plate.toLowerCase().includes(searchTerm)
       );
 
@@ -598,6 +598,8 @@
 
       paginatedData.forEach((item, index) => {
         const row = document.createElement("tr");
+        // Ensure index matches the current data array, not just the paginated slice
+        const actualIndex = data.findIndex(d => d === item); 
         row.innerHTML = `
           <td>${item.service}</td>
           <td>${item.plate}</td>
@@ -605,8 +607,8 @@
           <td>${item.date}</td>
           <td>${parseFloat(item.distance).toFixed(2)}</td>
           <td>
-            <button onclick="editRecord(${index})" class="action-btn edit-btn">تعديل</button>
-            <button onclick="deleteRecord(${index})" class="action-btn delete-btn">حذف</button>
+            <button onclick="editRecord(${actualIndex})" class="action-btn edit-btn">تعديل</button>
+            <button onclick="deleteRecord(${actualIndex})" class="action-btn delete-btn">حذف</button>
           </td>
         `;
         tbody.appendChild(row);
@@ -614,6 +616,52 @@
 
       updatePagination(filteredData.length);
     }
+
+    // Helper function to format date
+    function formatDateToYYYYMMDD(dateValue) {
+        if (typeof dateValue === 'number' && !isNaN(dateValue)) {
+            // Convert Excel date number (days since 1900-01-01) to JavaScript Date
+            // Excel's 1900 date system considers 1900-02-29 as a valid date, which it isn't.
+            // So, we subtract 1 day from the Excel date number if it's greater than 59 (Feb 28, 1900)
+            // because Excel treats 1900 as a leap year.
+            let days = dateValue;
+            if (days > 60) { // Check for dates after Feb 28, 1900
+                days--;
+            }
+            // Date object for Jan 1, 1900 (Excel's base date, day 1). Use UTC to avoid timezone issues.
+            const excelEpoch = new Date('1900-01-01T00:00:00Z'); 
+            excelEpoch.setDate(excelEpoch.getDate() + days - 1); // Subtract 1 because Excel day 1 is 1900-01-01, not 0
+            
+            return excelEpoch.toISOString().split('T')[0];
+
+        } else if (typeof dateValue === 'string') {
+            const parsedDate = new Date(dateValue);
+            // Check for valid date string, including "yyyy-mm-dd"
+            if (!isNaN(parsedDate.getTime())) {
+                return parsedDate.toISOString().split('T')[0];
+            }
+            // Try parsing common European/Arabic formats (dd/mm/yyyy or dd-mm-yyyy) if direct parse fails
+            const parts = dateValue.match(/^(\d{1,2})[/\-](\d{1,2})[/\-](\d{4})$/);
+            if (parts) {
+                const day = parseInt(parts[1]);
+                const month = parseInt(parts[2]);
+                const year = parseInt(parts[3]);
+                // Assuming dd/mm/yyyy format for Arabic context
+                const reParsedDate = new Date(year, month - 1, day); // Month is 0-indexed in JS
+                if (!isNaN(reParsedDate.getTime())) {
+                    return reParsedDate.toISOString().split('T')[0];
+                }
+            }
+        }
+        return ''; // Return empty string for invalid dates
+    }
+
+    // Helper function to parse distance
+    function parseDistance(distanceValue) {
+        const parsedDistance = parseFloat(distanceValue);
+        return isNaN(parsedDistance) ? 0 : parsedDistance;
+    }
+
 
     function addInvoice() {
       if (!loggedIn) {
@@ -624,7 +672,7 @@
       const service = document.getElementById("service").value.trim();
       const plate = document.getElementById("plate").value.trim();
       const region = document.getElementById("region").value.trim();
-      const date = document.getElementById("date").value;
+      const date = document.getElementById("date").value; // This is already YYYY-MM-DD from input type="date"
       const distance = document.getElementById("distance").value.trim();
       const notes = document.getElementById("notes").value.trim();
 
@@ -633,13 +681,17 @@
         return;
       }
 
+      // Format date and distance for consistency
+      const formattedDate = formatDateToYYYYMMDD(date);
+      const parsedDistance = parseDistance(distance);
+
       // إذا كانت المنطقة جديدة نضيفها للقائمة
       if (!regionsList.includes(region)) {
         regionsList.push(region);
         updateRegionsDatalist();
       }
 
-      const record = { service, plate, region, date, distance, notes };
+      const record = { service, plate, region, date: formattedDate, distance: parsedDistance, notes };
       data.push(record);
 
       updateTable();
@@ -658,7 +710,8 @@
       const datalist = document.getElementById("regions");
       datalist.innerHTML = "";
       
-      regionsList.forEach(region => {
+      // Sort regions alphabetically for better user experience
+      regionsList.sort().forEach(region => {
         const option = document.createElement("option");
         option.value = region;
         datalist.appendChild(option);
@@ -666,6 +719,9 @@
     }
 
     function updateTable() {
+      // Always reset current page to 1 when table data is updated
+      // This ensures we start from the beginning of the new data set.
+      currentPage = 1; 
       renderFilteredTable(data);
     }
 
@@ -673,24 +729,32 @@
       const plateSelect = document.getElementById("plateSelect");
       plateSelect.innerHTML = "";
       
-      data.forEach(item => {
+      // Get unique plates to avoid duplicates in the select dropdown
+      const uniquePlates = [...new Set(data.map(item => item.plate))];
+      uniquePlates.forEach(plate => {
         const option = document.createElement("option");
-        option.value = item.plate;
-        option.text = item.plate;
+        option.value = plate;
+        option.text = plate;
         plateSelect.appendChild(option);
       });
     }
 
     function updatePagination(totalItems = data.length) {
       const totalPages = Math.ceil(totalItems / itemsPerPage);
-      const paginationText = `${currentPage} من ${totalPages}`;
+      // Ensure currentPage doesn't exceed totalPages if data shrinks
+      if (currentPage > totalPages && totalPages > 0) {
+          currentPage = totalPages;
+      } else if (totalPages === 0) { // Handle case with no data
+          currentPage = 0;
+      }
+      const paginationText = `${currentPage === 0 ? 0 : currentPage} من ${totalPages}`;
       document.querySelector(".pagination span").textContent = paginationText;
     }
 
     function prevPage() {
       if (currentPage > 1) {
         currentPage--;
-        updateTable();
+        renderFilteredTable(data); // Call renderFilteredTable to re-render with new page
       }
     }
 
@@ -698,7 +762,7 @@
       const totalPages = Math.ceil(data.length / itemsPerPage);
       if (currentPage < totalPages) {
         currentPage++;
-        updateTable();
+        renderFilteredTable(data); // Call renderFilteredTable to re-render with new page
       }
     }
 
@@ -724,6 +788,12 @@
     function deleteRecord(index) {
       if (confirm("هل أنت متأكد من حذف هذا السجل؟")) {
         data.splice(index, 1);
+        // Reset current page if no items are left on it
+        if (data.length > 0 && currentPage > Math.ceil(data.length / itemsPerPage)) {
+            currentPage = Math.ceil(data.length / itemsPerPage);
+        } else if (data.length === 0) {
+            currentPage = 1; // Or 0, depending on preference for empty table
+        }
         updateTable();
         updatePlateSelect();
       }
@@ -754,8 +824,8 @@
             <div>
               <h1 class="print-title">طلب صيانة</h1>
               <div class="print-company-details">
-                <div>السجل التجاري: <span>${company.commercialRegister}</span></div>
-                <div>الرقم الضريبي: <span>${company.taxNumber}</span></div>
+                <div>السجل التجاري: <span style="display:inline-block;">${company.commercialRegister}</span></div>
+                <div>الرقم الضريبي: <span style="display:inline-block;">${company.taxNumber}</span></div>
               </div>
             </div>
             <img class="print-logo" src="${logo}" alt="شعار الشركة">
@@ -805,6 +875,141 @@
       }, 300);
     }
 
+    // Excel Upload Functionality
+    function handleExcelUpload() {
+      if (!loggedIn) {
+        alert("يجب تسجيل الدخول أولاً");
+        return;
+      }
+
+      const fileInput = document.getElementById('excelUpload');
+      const file = fileInput.files[0];
+
+      if (!file) {
+        alert("الرجاء اختيار ملف Excel لرفعه.");
+        return;
+      }
+
+      // Check file extension to ensure it's .xlsx or .xls
+      const fileName = file.name.toLowerCase();
+      if (!fileName.endsWith('.xlsx') && !fileName.endsWith('.xls')) {
+        alert("الرجاء رفع ملف بصيغة Excel الصحيحة (.xlsx أو .xls).");
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const dataBuffer = e.target.result;
+          const workbook = XLSX.read(dataBuffer, { type: 'array' });
+          const sheetName = workbook.SheetNames[0];
+          const worksheet = workbook.Sheets[sheetName];
+          
+          // Use header: 1 to ensure headers are read from the first row as an array
+          const rawJson = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+
+          if (rawJson.length === 0) {
+              console.warn("Excel file is empty or headers not found.");
+              alert("ملف Excel فارغ أو لا يحتوي على بيانات يمكن قراءتها.");
+              return;
+          }
+
+          // Assuming the first row is always headers
+          const headers = rawJson[0];
+          const dataRows = rawJson.slice(1); // All subsequent rows are data
+
+          console.log("Excel Headers Read (Raw):", headers); // Log raw headers for debugging
+
+          // Manually map headers from Excel to desired internal keys
+          const mappedJson = dataRows.map(row => {
+              const obj = {};
+              headers.forEach((header, index) => {
+                  if (header === null || header === undefined) return; // Skip null/undefined headers
+                  const normalizedHeader = String(header).trim().toLowerCase();
+                  
+                  // Explicitly map both Arabic and English forms
+                  if (normalizedHeader === 'الخدمة'.toLowerCase() || normalizedHeader === 'service') obj['service'] = row[index];
+                  else if (normalizedHeader === 'رقم اللوحة'.toLowerCase() || normalizedHeader === 'plate') obj['plate'] = row[index];
+                  else if (normalizedHeader === 'المنطقة'.toLowerCase() || normalizedHeader === 'region') obj['region'] = row[index];
+                  else if (normalizedHeader === 'تاريخ الطلب'.toLowerCase() || normalizedHeader === 'date') obj['date'] = row[index];
+                  else if (normalizedHeader === 'المسافة المقطوعة (كم)'.toLowerCase() || normalizedHeader === 'distance') obj['distance'] = row[index];
+                  else if (normalizedHeader === 'ملاحظات'.toLowerCase() || normalizedHeader === 'notes') obj['notes'] = row[index];
+                  // else {
+                  //     // Optional: log unmapped headers if you want to know which columns are ignored
+                  //     console.log(`Unmapped header: '${header}' with value: '${row[index]}'`);
+                  // }
+              });
+              return obj;
+          }).filter(obj => Object.keys(obj).length > 0); // Filter out empty objects (rows with no data)
+
+          console.log("Excel Data Read (Mapped JSON):", mappedJson); 
+          
+          processExcelData(mappedJson); // Pass the manually mapped JSON
+        } catch (error) {
+          console.error("Error reading Excel file:", error);
+          alert("حدث خطأ أثناء قراءة ملف Excel. يرجى التأكد من أنه ملف صالح.");
+        }
+      };
+      reader.readAsArrayBuffer(file);
+    }
+
+    function processExcelData(jsonData) {
+      let recordsAdded = 0;
+
+      jsonData.forEach(row => {
+        const newRecord = {};
+        let isValidRow = true;
+
+        // Explicitly assign values based on expected internal keys
+        newRecord.service = String(row.service || '').trim();
+        newRecord.plate = String(row.plate || '').trim();
+        newRecord.region = String(row.region || '').trim();
+        newRecord.date = formatDateToYYYYMMDD(row.date);
+        newRecord.distance = parseDistance(row.distance);
+        newRecord.notes = String(row.notes || '').trim();
+
+        // Check if all required fields are present and valid
+        const requiredFields = ['service', 'plate', 'region', 'date', 'distance'];
+        for (const field of requiredFields) {
+          // Date field can be empty if formatDateToYYYYMMDD returned empty for invalid input
+          // Distance field can be 0 if parseDistance returned 0 for invalid input, but 0 is valid.
+          // We need to check if the original value leading to 0 was truly empty/invalid.
+          if (!newRecord[field] || String(newRecord[field]).trim() === '') {
+            if (field !== 'distance' || (field === 'distance' && isNaN(row.distance) && String(row.distance || '').trim() !== '0')) {
+                 isValidRow = false;
+                 console.warn(`Skipping row due to missing or empty required field: '${field}' in row:`, row);
+                 break;
+            }
+          }
+          // Special check for date if it's empty after formatting
+          if (field === 'date' && newRecord[field] === '') {
+             isValidRow = false;
+             console.warn(`Skipping row due to invalid date format: '${row.date}' in row:`, row);
+             break;
+          }
+        }
+        
+        // Add region to regionsList if new and valid
+        if (isValidRow && newRecord.region && !regionsList.includes(newRecord.region)) {
+            regionsList.push(newRecord.region);
+        }
+
+        if (isValidRow) {
+          data.push(newRecord);
+          recordsAdded++;
+        }
+      });
+
+      console.log(`Successfully added ${recordsAdded} records from Excel.`);
+
+      // After adding all valid records, update the UI
+      updateRegionsDatalist(); // Update datalist with any new regions
+      updateTable(); // Call updateTable to re-render the table from page 1
+      updatePlateSelect();
+      alert(`تم تحميل ${recordsAdded} سجل بنجاح من ملف Excel!`);
+    }
+
+
     // تهيئة الصفحة عند التحميل
     document.addEventListener('DOMContentLoaded', function() {
       document.getElementById("logoSelect").addEventListener("change", function() {
@@ -817,6 +1022,11 @@
         document.getElementById("loginSection").classList.remove("hidden");
         document.getElementById("mainContent").classList.add("hidden");
       }
+      
+      // Initial update for regions datalist and table
+      updateRegionsDatalist();
+      updateTable(); // Ensure table is rendered on initial load (though likely empty until data is added)
+      updatePlateSelect(); // Ensure plate select is updated
     });
   </script>
 </body>

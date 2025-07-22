@@ -183,14 +183,21 @@
     }
 
     .logo-preview {
-      height: 100px;
+      height: 120px;
       margin-top: 10px;
       display: block;
       border-radius: var(--radius);
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
       object-fit: contain;
       background: white;
       padding: 5px;
+      border: 2px solid #fff;
+      transition: all 0.3s ease;
+    }
+
+    .logo-preview:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px rgba(0,0,0,0.3);
     }
 
     .company-header {
@@ -210,20 +217,36 @@
     }
 
     .company-name {
-      font-size: 22px;
+      font-size: 24px;
       font-weight: 700;
       margin-bottom: 10px;
+      color: #fff;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
     }
 
     .company-details {
-      font-size: 15px;
-      opacity: 0.9;
+      font-size: 16px;
+    }
+
+    .company-detail-item {
+      margin-bottom: 8px;
+      color: rgba(255,255,255,0.9);
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
     }
 
     .company-logo {
-      height: 100px;
+      height: 120px;
       border-radius: var(--radius);
-      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+      border: 2px solid #fff;
+      background: white;
+      padding: 5px;
+      transition: all 0.3s ease;
+    }
+
+    .company-logo:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px rgba(0,0,0,0.3);
     }
 
     .language-switcher {
@@ -395,7 +418,7 @@
       }
 
       /* Watermark */
-      #printArea::after {
+      #printArea::before {
         content: "";
         position: fixed;
         top: 50%;
@@ -407,7 +430,7 @@
         background-size: contain;
         background-repeat: no-repeat;
         background-position: center;
-        opacity: 0.1;
+        opacity: 0.15;
         z-index: 9999;
         pointer-events: none;
       }
@@ -455,13 +478,13 @@
 
     <div class="company-header fade-in delay-1">
       <div class="company-info">
-        <div class="company-name" id="currentCompanyName">مؤسسة هند عطية / Hinda Atiyah Est.</div>
+        <div class="company-name" id="currentCompanyName">الزهراني لوجستيك / Al-Zahrani Logistics</div>
         <div class="company-details">
-          <div class="company-detail-item">السجل التجاري / Commercial Register: <span id="currentCommercialRegister">205012619</span></div>
-          <div class="company-detail-item">الرقم الضريبي / Tax Number: <span id="currentTaxNumber">302120852100003</span></div>
+          <div class="company-detail-item">السجل التجاري / Commercial Register: <span id="currentCommercialRegister">123456789</span></div>
+          <div class="company-detail-item">الرقم الضريبي / Tax Number: <span id="currentTaxNumber">98765432100003</span></div>
         </div>
       </div>
-      <img id="mainLogo" class="company-logo" src="https://i.imgur.com/8SUC13Y.png" alt="شعار الشركة / Company Logo">
+      <img id="mainLogo" class="company-logo" src="https://i.imgur.com/fUpc8uz.png" alt="شعار الشركة / Company Logo">
     </div>
 
     <div class="glass-card fade-in delay-2">
@@ -476,14 +499,15 @@
         <div class="col">
           <label id="logoLabel">اختيار الشعار / Select Logo:</label>
           <select id="logoSelect">
-            <option value="https://i.imgur.com/8SUC13Y.png">الزهراني / Al-Zahrani</option>
+            <option value="https://i.imgur.com/fUpc8uz.png" selected>الزهراني / Al-Zahrani</option>
             <option value="https://i.imgur.com/yS26oQZ.png">ميم / Mim</option>
           </select>
-          <img id="logoPreview" class="logo-preview" src="https://i.imgur.com/8SUC13Y.png" alt="شعار الشركة / Company Logo">
+          <img id="logoPreview" class="logo-preview" src="https://i.imgur.com/fUpc8uz.png" alt="شعار الشركة / Company Logo">
         </div>
       </div>
     </div>
 
+    <!-- باقي أقسام النموذج تبقى كما هي -->
     <div class="glass-card fade-in delay-2">
       <h3 style="margin-top: 0;" id="searchTitle">بحث عن مركبة / Vehicle Search</h3>
       <div class="row">
@@ -1311,4 +1335,4 @@
     });
   </script>
 </body>
-</html>   
+</html>

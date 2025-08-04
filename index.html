@@ -426,13 +426,18 @@
         transform: translate(-50%, -50%) rotate(-30deg);
         width: 60%;
         height: 60%;
-        background-image: url('https://i.imgur.com/fUpc8uz.png');
+        background-image: url('https://i.imgur.com/Zavx93d.png');
         background-size: contain;
         background-repeat: no-repeat;
         background-position: center;
         opacity: 0.15;
         z-index: 9999;
         pointer-events: none;
+      }
+
+      /* تجنب طباعة الصفحات الفارغة */
+      .print-table + .print-table {
+        page-break-before: avoid;
       }
     }
 
@@ -484,7 +489,7 @@
           <div class="company-detail-item">الرقم الضريبي / Tax Number: <span id="currentTaxNumber">98765432100003</span></div>
         </div>
       </div>
-      <img id="mainLogo" class="company-logo" src="https://i.imgur.com/fUpc8uz.png" alt="شعار الشركة / Company Logo">
+      <img id="mainLogo" class="company-logo" src="https://i.imgur.com/Zavx93d.png" alt="شعار الشركة / Company Logo">
     </div>
 
     <div class="glass-card fade-in delay-2">
@@ -499,10 +504,10 @@
         <div class="col">
           <label id="logoLabel">اختيار الشعار / Select Logo:</label>
           <select id="logoSelect">
-            <option value="https://i.imgur.com/fUpc8uz.png" selected>الزهراني / Al-Zahrani</option>
+            <option value="https://i.imgur.com/Zavx93d.png" selected>الزهراني / Al-Zahrani</option>
             <option value="https://i.imgur.com/yS26oQZ.png">ميم / Mim</option>
           </select>
-          <img id="logoPreview" class="logo-preview" src="https://i.imgur.com/fUpc8uz.png" alt="شعار الشركة / Company Logo">
+          <img id="logoPreview" class="logo-preview" src="https://i.imgur.com/Zavx93d.png" alt="شعار الشركة / Company Logo">
         </div>
       </div>
     </div>
@@ -630,7 +635,8 @@
           <label id="selectPlatesLabel">اختيار اللوحات للطباعة / Select Plates for Printing:</label>
           <select id="plateSelect" multiple size="5" style="height: 120px; width: 100%;"></select>
         </div>
-        <div class="col" style="display: flex; align-items: flex-end;">
+        <div class="col" style="display: flex; flex-direction: column; gap: 10px;">
+          <button onclick="clearPlateSelection()" class="btn btn-secondary" id="clearSelectionButton">مسح الاختيار / Clear Selection</button>
           <button onclick="printSelected()" class="btn" id="printButton">طباعة PDF / Print PDF</button>
         </div>
       </div>
@@ -698,6 +704,7 @@
         uploadButton: "رفع وتحميل البيانات",
         selectPlatesLabel: "اختيار اللوحات للطباعة",
         printButton: "طباعة PDF",
+        clearSelectionButton: "مسح الاختيار",
         prevButton: "< السابق",
         nextButton: "التالي >",
         pageInfo: "1 من 2",
@@ -737,6 +744,7 @@
         uploadButton: "Upload and Load Data",
         selectPlatesLabel: "Select Plates for Printing",
         printButton: "Print PDF",
+        clearSelectionButton: "Clear Selection",
         prevButton: "Previous",
         nextButton: "Next >",
         pageInfo: "1 of 2",
@@ -808,6 +816,7 @@
       document.getElementById('uploadButton').textContent = lang.uploadButton;
       document.getElementById('selectPlatesLabel').textContent = lang.selectPlatesLabel;
       document.getElementById('printButton').textContent = lang.printButton;
+      document.getElementById('clearSelectionButton').textContent = lang.clearSelectionButton;
       document.getElementById('prevButton').textContent = lang.prevButton;
       document.getElementById('nextButton').textContent = lang.nextButton;
       document.getElementById('serviceHeader').textContent = lang.serviceHeader;
@@ -1071,6 +1080,14 @@
       }
     }
 
+    // دالة مسح اختيار اللوحات
+    function clearPlateSelection() {
+      const plateSelect = document.getElementById("plateSelect");
+      Array.from(plateSelect.options).forEach(option => {
+        option.selected = false;
+      });
+    }
+
     // دالة تعديل السجل
     function editRecord(index) {
       const record = data[index];
@@ -1317,6 +1334,7 @@
       document.getElementById("logoSelect").addEventListener("change", function() {
         const logoUrl = this.value;
         document.getElementById("logoPreview").src = logoUrl;
+        document.getElementById("mainLogo").src = logoUrl;
       });
 
       // إذا كان المستخدم يحاول الوصول مباشرة للصفحة الرئيسية دون تسجيل دخول
@@ -1332,6 +1350,9 @@
       
       // Initial company load
       changeCompany();
+      
+      // Apply translations
+      applyTranslations();
     });
   </script>
 </body>

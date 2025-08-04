@@ -417,20 +417,20 @@
         display: none !important;
       }
 
-      /* Watermark */
+      /* العلامة المائية المعدلة */
       #printArea::before {
         content: "";
         position: fixed;
         top: 50%;
         left: 50%;
-        transform: translate(-50%, -50%) rotate(-30deg);
-        width: 60%;
-        height: 60%;
+        transform: translate(-50%, -50%);
+        width: 70%;
+        height: 70%;
         background-image: url('https://i.imgur.com/Zavx93d.png');
         background-size: contain;
         background-repeat: no-repeat;
         background-position: center;
-        opacity: 0.15;
+        opacity: 0.1;
         z-index: 9999;
         pointer-events: none;
       }
@@ -512,7 +512,6 @@
       </div>
     </div>
 
-    <!-- باقي أقسام النموذج تبقى كما هي -->
     <div class="glass-card fade-in delay-2">
       <h3 style="margin-top: 0;" id="searchTitle">بحث عن مركبة / Vehicle Search</h3>
       <div class="row">
@@ -1113,7 +1112,7 @@
         // Reset current page if no items are left on it
         if (data.length > 0 && currentPage > Math.ceil(data.length / itemsPerPage)) {
             currentPage = Math.ceil(data.length / itemsPerPage);
-        } else if (data.length === 0) {
+        } else if (data.length === 0) { // Handle case with no data
             currentPage = 1; // Or 0, depending on preference for empty table
         }
         updateTable();
